@@ -1,0 +1,33 @@
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import java.lang.String?>
+<GridPane xmlns:fx="http://javafx.com/fxml/1" fx:id="startupPane"
+          fx:controller="org.kabieror.elwasys.raspiclient.ui.medium.controller.StartupViewController"
+          style="-fx-background-color: #fff">
+    <rowConstraints>
+        <RowConstraints valignment="BOTTOM" vgrow="ALWAYS"/>
+        <RowConstraints valignment="TOP" vgrow="ALWAYS"/>
+        <RowConstraints vgrow="SOMETIMES"/>
+    </rowConstraints>
+    <columnConstraints>
+        <ColumnConstraints halignment="LEFT" hgrow="ALWAYS"/>
+        <ColumnConstraints halignment="RIGHT" hgrow="ALWAYS"/>
+    </columnConstraints>
+    <children>
+        <!-- Icon -->
+        <Label text="" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER"
+               GridPane.rowIndex="0">
+            <styleClass>
+                <String fx:value="icon"/>
+                <String fx:value="icon-large"/>
+            </styleClass>
+        </Label>
+        <Label fx:id="status" text="Startvorgang..." GridPane.columnIndex="0" GridPane.columnSpan="2"
+               GridPane.halignment="CENTER" GridPane.rowIndex="1">
+            <font>
+                <Font size="22.0"/>
+            </font>
+        </Label>
+    </children>
+</GridPane>

@@ -1,0 +1,8 @@
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.web.WebView?>
+<HBox xmlns:fx="http://javafx.com/fxml/1" fx:id="mainPane" visible="false"
+      fx:controller="org.kabieror.elwasys.raspiclient.ui.medium.controller.AppInfoViewController"
+      alignment="CENTER">
+    <WebView fx:id="webView"></WebView>
+</HBox>

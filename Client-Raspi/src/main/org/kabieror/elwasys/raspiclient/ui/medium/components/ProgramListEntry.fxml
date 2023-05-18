@@ -1,0 +1,23 @@
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.*?>
+<GridPane xmlns:fx="http://javafx.com/fxml/1" fx:id="entryPane"
+          fx:controller="org.kabieror.elwasys.raspiclient.ui.medium.controller.ProgramListEntry"
+          styleClass="program-entry" onMouseClicked="#onClicked">
+    <rowConstraints>
+        <RowConstraints/>
+    </rowConstraints>
+    <columnConstraints>
+        <ColumnConstraints halignment="LEFT"/>
+        <ColumnConstraints/>
+        <ColumnConstraints halignment="RIGHT"/>
+    </columnConstraints>
+
+    <Label text="" styleClass="icon, icon-big" GridPane.rowSpan="2" GridPane.rowIndex="0" GridPane.columnIndex="0"
+           alignment="CENTER"/>
+    <Label text="${controller.program.name}" styleClass="name" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+    <Label text="${controller.maxPrice}" styleClass="price" GridPane.rowIndex="0" GridPane.columnIndex="2"/>
+
+    <FlowPane fx:id="detailBox" GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.columnSpan="2" hgap="5"
+              vgap="3"/>
+
+</GridPane>

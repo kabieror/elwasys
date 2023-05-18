@@ -1,0 +1,488 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?scenebuilder-stylesheet @MainForm.css?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.net.URL?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" styleClass="root" xmlns="http://javafx.com/javafx/8"
+            fx:controller="org.kabieror.elwasys.raspiclient.ui.small.MainFormController">
+    <stylesheets>
+        <URL value="@MainForm.css"/>
+    </stylesheets>
+    <GridPane fx:id="startupPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+              AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <rowConstraints>
+            <RowConstraints vgrow="ALWAYS" valignment="BOTTOM"/>
+            <RowConstraints vgrow="ALWAYS" valignment="TOP"/>
+            <RowConstraints vgrow="SOMETIMES"/>
+        </rowConstraints>
+        <columnConstraints>
+            <ColumnConstraints halignment="LEFT" hgrow="ALWAYS"/>
+            <ColumnConstraints halignment="RIGHT" hgrow="ALWAYS"/>
+        </columnConstraints>
+        <!-- Icon -->
+        <Label GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="2"
+               GridPane.halignment="CENTER" text="">
+            <styleClass>
+                <String fx:value="icon"/>
+                <String fx:value="icon-large"/>
+            </styleClass>
+        </Label>
+        <Label GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.columnSpan="2"
+               GridPane.halignment="CENTER" fx:id="startup_status" text="Startvorgang...">
+            <font>
+                <Font size="22.0"/>
+            </font>
+        </Label>
+        <Label GridPane.rowIndex="2" GridPane.columnIndex="0" fx:id="start_versionLabel"
+               text="${controller.versionString}">
+            <GridPane.margin>
+                <Insets bottom="10" left="10" right="10" top="0"/>
+            </GridPane.margin>
+        </Label>
+        <Label GridPane.rowIndex="2" GridPane.columnIndex="1" text="© Oliver Kabierschke">
+            <GridPane.margin>
+                <Insets bottom="10" left="10" right="10" top="0"/>
+            </GridPane.margin>
+        </Label>
+    </GridPane>
+    <GridPane fx:id="devicePane" styleClass="device-grid-pane" visible="false" AnchorPane.bottomAnchor="0.0"
+              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="50.0" prefWidth="100.0"/>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="50.0"/>
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints minHeight="0.0" percentHeight="50.0" valignment="CENTER"/>
+            <RowConstraints minHeight="0.0" percentHeight="50.0" valignment="CENTER"/>
+        </rowConstraints>
+        <children>
+            <AnchorPane fx:id="device1container" prefHeight="200.0" prefWidth="200.0" styleClass="device-grid-cell">
+                <children>
+                    <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                              AnchorPane.topAnchor="0.0">
+                        <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                        </columnConstraints>
+                        <rowConstraints>
+                            <RowConstraints maxHeight="116.0" minHeight="4.000000715255737"
+                                            prefHeight="86.00000381469727" vgrow="SOMETIMES"/>
+                            <RowConstraints maxHeight="111.99999928474426" minHeight="0.0"
+                                            prefHeight="29.999996185302734" vgrow="SOMETIMES"/>
+                        </rowConstraints>
+                        <children>
+                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                <children>
+                                    <Label fx:id="device1label" alignment="CENTER" text="1"
+                                           AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                           AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                        <font>
+                                            <Font size="58.0"/>
+                                        </font>
+                                    </Label>
+                                </children>
+                            </AnchorPane>
+                            <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="device-grid-detail-pane"
+                                        GridPane.rowIndex="1">
+                                <children>
+                                    <Label fx:id="device1detailLabel" alignment="CENTER" text="Oliver Kabierschke"
+                                           AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                           AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                        <font>
+                                            <Font size="12.0"/>
+                                        </font>
+                                    </Label>
+                                </children>
+                            </AnchorPane>
+                        </children>
+                    </GridPane>
+                </children>
+                <GridPane.margin>
+                    <Insets/>
+                </GridPane.margin>
+            </AnchorPane>
+            <AnchorPane fx:id="device2container" layoutX="11.0" layoutY="11.0" prefHeight="200.0" prefWidth="200.0"
+                        styleClass="device-grid-cell" GridPane.columnIndex="1">
+                <children>
+                    <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                              AnchorPane.topAnchor="0.0">
+                        <children>
+                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                <children>
+                                    <Label alignment="CENTER" text="2" AnchorPane.bottomAnchor="0.0"
+                                           AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                                           AnchorPane.topAnchor="0.0">
+                                        <font>
+                                            <Font size="58.0"/>
+                                        </font>
+                                    </Label>
+                                </children>
+                            </AnchorPane>
+                            <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="device-grid-detail-pane"
+                                        GridPane.rowIndex="1">
+                                <children>
+                                    <Label fx:id="device2detailLabel" alignment="CENTER" styleClass="occupied"
+                                           text="Oliver Kabierschke" AnchorPane.bottomAnchor="0.0"
+                                           AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                                           AnchorPane.topAnchor="0.0">
+                                        <font>
+                                            <Font size="12.0"/>
+                                        </font>
+                                    </Label>
+                                </children>
+                            </AnchorPane>
+                        </children>
+                        <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                        </columnConstraints>
+                        <rowConstraints>
+                            <RowConstraints maxHeight="116.0" minHeight="4.000000715255737"
+                                            prefHeight="86.00000381469727" vgrow="SOMETIMES"/>
+                            <RowConstraints maxHeight="111.99999928474426" minHeight="0.0"
+                                            prefHeight="29.999996185302734" vgrow="SOMETIMES"/>
+                        </rowConstraints>
+                    </GridPane>
+                </children>
+            </AnchorPane>
+            <AnchorPane fx:id="device3container" layoutX="11.0" layoutY="11.0" prefHeight="200.0" prefWidth="200.0"
+                        GridPane.rowIndex="1">
+                <children>
+                    <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                              AnchorPane.topAnchor="0.0">
+                        <children>
+                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                <children>
+                                    <Label alignment="CENTER" text="3" AnchorPane.bottomAnchor="0.0"
+                                           AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                                           AnchorPane.topAnchor="0.0">
+                                        <font>
+                                            <Font size="58.0"/>
+                                        </font>
+                                    </Label>
+                                </children>
+                            </AnchorPane>
+                            <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="device-grid-detail-pane"
+                                        GridPane.rowIndex="1">
+                                <children>
+                                    <Label fx:id="device3detailLabel" alignment="CENTER" styleClass="occupied"
+                                           text="Oliver Kabierschke" AnchorPane.bottomAnchor="0.0"
+                                           AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                                           AnchorPane.topAnchor="0.0">
+                                        <font>
+                                            <Font size="12.0"/>
+                                        </font>
+                                    </Label>
+                                </children>
+                            </AnchorPane>
+                        </children>
+                        <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                        </columnConstraints>
+                        <rowConstraints>
+                            <RowConstraints maxHeight="116.0" minHeight="4.000000715255737"
+                                            prefHeight="86.00000381469727" vgrow="SOMETIMES"/>
+                            <RowConstraints maxHeight="111.99999928474426" minHeight="0.0"
+                                            prefHeight="29.999996185302734" vgrow="SOMETIMES"/>
+                        </rowConstraints>
+                    </GridPane>
+                </children>
+                <styleClass>
+                    <String fx:value="device-grid-cell"/>
+                    <String fx:value="occupied"/>
+                </styleClass>
+            </AnchorPane>
+            <AnchorPane fx:id="device4container" layoutX="11.0" layoutY="11.0" prefHeight="200.0" prefWidth="200.0"
+                        GridPane.columnIndex="1" GridPane.rowIndex="1">
+                <children>
+                    <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                              AnchorPane.topAnchor="0.0">
+                        <children>
+                            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                <children>
+                                    <Label alignment="CENTER" text="4" AnchorPane.bottomAnchor="0.0"
+                                           AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                                           AnchorPane.topAnchor="0.0">
+                                        <font>
+                                            <Font size="58.0"/>
+                                        </font>
+                                    </Label>
+                                </children>
+                            </AnchorPane>
+                            <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="device-grid-detail-pane"
+                                        GridPane.rowIndex="1">
+                                <children>
+                                    <Label fx:id="device4detailLabel" alignment="CENTER" text="Oliver Kabierschke"
+                                           AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                                           AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                        <font>
+                                            <Font size="12.0"/>
+                                        </font>
+                                    </Label>
+                                </children>
+                            </AnchorPane>
+                        </children>
+                        <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                        </columnConstraints>
+                        <rowConstraints>
+                            <RowConstraints maxHeight="116.0" minHeight="4.000000715255737"
+                                            prefHeight="86.00000381469727" vgrow="SOMETIMES"/>
+                            <RowConstraints maxHeight="111.99999928474426" minHeight="0.0"
+                                            prefHeight="29.999996185302734" vgrow="SOMETIMES"/>
+                        </rowConstraints>
+                    </GridPane>
+                </children>
+                <styleClass>
+                    <String fx:value="device-grid-cell"/>
+                    <String fx:value="disabled"/>
+                </styleClass>
+            </AnchorPane>
+        </children>
+    </GridPane>
+    <AnchorPane fx:id="infoPane" prefHeight="200.0" prefWidth="200.0" visible="false" AnchorPane.bottomAnchor="0.0"
+                AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <children>
+            <Label fx:id="info_labelDevice" layoutX="14.0" layoutY="14.0" styleClass="title" text="Label Device"/>
+            <Separator layoutX="10.0" layoutY="50.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0"
+                       AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0"/>
+            <GridPane layoutX="76.0" layoutY="70.0" prefHeight="58.0" prefWidth="168.0">
+                <columnConstraints>
+                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="127.0" minWidth="10.0" prefWidth="56.0"/>
+                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="3.0" prefWidth="112.0"/>
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                </rowConstraints>
+                <children>
+                    <Label text="Benutzer:"/>
+                    <Label fx:id="info_labelUser" alignment="CENTER_RIGHT" contentDisplay="RIGHT" prefHeight="0.0"
+                           prefWidth="250.0" text="Oliver Kabierschke" GridPane.columnIndex="1"/>
+                    <Label text="Restzeit:" GridPane.rowIndex="1"/>
+                    <Label fx:id="info_labelRemaining" alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="204.0"
+                           text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                    <Label text="Endzeit:" GridPane.rowIndex="2"/>
+                    <Label fx:id="info_labelEndTime" alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="176.0"
+                           text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                </children>
+            </GridPane>
+            <Button fx:id="info_buttonAbortProgram" defaultButton="true" layoutX="147.0" layoutY="191.0"
+                    mnemonicParsing="false" prefHeight="35.0" prefWidth="159.0" text="Programm abbrechen"/>
+            <Button fx:id="info_buttonCancel" cancelButton="true" layoutX="14.0" layoutY="191.0"
+                    mnemonicParsing="false" text="&lt; Zurück"/>
+        </children>
+    </AnchorPane>
+    <AnchorPane fx:id="confirmAbortionPane" prefHeight="200.0" prefWidth="200.0" visible="false"
+                AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                AnchorPane.topAnchor="0.0">
+        <children>
+            <ImageView fitHeight="120.0" fitWidth="130.0" layoutX="95.0" layoutY="27.0" pickOnBounds="true"
+                       preserveRatio="true">
+                <image>
+                    <Image url="@/img/warning.png"/>
+                </image>
+            </ImageView>
+            <ImageView fitHeight="76.0" fitWidth="92.0" layoutX="34.0" layoutY="27.0" pickOnBounds="true"
+                       preserveRatio="true">
+                <image>
+                    <Image url="@/img/explosive.png"/>
+                </image>
+            </ImageView>
+            <ImageView fitHeight="87.0" fitWidth="87.0" layoutX="199.0" layoutY="27.0" pickOnBounds="true"
+                       preserveRatio="true">
+                <image>
+                    <Image url="@/img/radioactive.png"/>
+                </image>
+            </ImageView>
+            <Label layoutX="55.0" layoutY="148.0" text="Abbruch bestätigen?">
+                <font>
+                    <Font size="23.0"/>
+                </font>
+            </Label>
+            <Button fx:id="abort_buttonNo" cancelButton="true" defaultButton="true" layoutX="233.0" layoutY="193.0"
+                    mnemonicParsing="false" prefHeight="35.0" prefWidth="73.0" text="Nein"
+                    AnchorPane.bottomAnchor="12.0" AnchorPane.rightAnchor="14.0"/>
+            <Button fx:id="abort_buttonYes" layoutX="14.0" layoutY="193.0" mnemonicParsing="false" prefHeight="35.0"
+                    prefWidth="73.0" text="Ja" AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="14.0"/>
+        </children>
+    </AnchorPane>
+    <AnchorPane id="program-pane" fx:id="programPane" blendMode="SRC_ATOP" prefHeight="200.0" prefWidth="200.0"
+                visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <children>
+            <Label fx:id="program_labelDevice" layoutX="14.0" layoutY="14.0" styleClass="title"
+                   text="Label Device"/>
+            <Separator layoutY="40.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                       AnchorPane.topAnchor="40.0"/>
+            <Label layoutX="14.0" layoutY="43.0" text="Bitte wähle das Programm."/>
+            <ListView fx:id="programList" layoutX="14.0" layoutY="63.0" prefHeight="114.0" prefWidth="292.0"
+                      AnchorPane.bottomAnchor="63.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0"
+                      AnchorPane.topAnchor="63.0"/>
+            <Button fx:id="program_buttonCancel" cancelButton="true" layoutX="12.0" layoutY="191.0"
+                    mnemonicParsing="false" styleClass="button-cancel" text="Abbrechen"
+                    AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="14.0"/>
+            <Button fx:id="program_buttonForward" defaultButton="true" layoutX="225.0" layoutY="191.0"
+                    mnemonicParsing="false" styleClass="button-forward" text="Weiter &gt;"
+                    AnchorPane.bottomAnchor="12.0" AnchorPane.rightAnchor="14.0"/>
+        </children>
+    </AnchorPane>
+    <AnchorPane id="confirmation-pane" fx:id="confirmationPane" prefHeight="200.0" prefWidth="200.0" visible="false"
+                AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                AnchorPane.topAnchor="0.0">
+        <children>
+            <Label fx:id="confirmation_labelDevice" layoutX="14.0" layoutY="14.0" styleClass="title"
+                   text="Label Device"/>
+            <Separator layoutY="40.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                       AnchorPane.topAnchor="40.0"/>
+            <Button fx:id="confirmation_buttonStart" defaultButton="true" layoutX="176.0" layoutY="191.0"
+                    mnemonicParsing="false" prefHeight="35.0" prefWidth="156.0" text="Programm starten"
+                    AnchorPane.bottomAnchor="12.0" AnchorPane.rightAnchor="14.0"/>
+            <Button fx:id="confirmation_buttonCancel" cancelButton="true" layoutX="14.0" layoutY="333.0"
+                    mnemonicParsing="false" text="&lt; Zurück" AnchorPane.bottomAnchor="12.0"
+                    AnchorPane.leftAnchor="14.0"/>
+            <BorderPane layoutX="14.0" layoutY="45.0" prefHeight="132.0" prefWidth="292.0"
+                        AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0">
+                <center>
+                    <Pane maxHeight="192.0" maxWidth="276.0" prefHeight="104.0" prefWidth="276.0"
+                          BorderPane.alignment="CENTER">
+                        <children>
+                            <Label fx:id="confirmation_userIcon" alignment="CENTER" layoutX="128.0" layoutY="8.0"
+                                   style="-fx-text-alignment: center;" text="">
+                                <styleClass>
+                                    <String fx:value="icon"/>
+                                    <String fx:value="icon-big"/>
+                                    <String fx:value="user-icon"/>
+                                    <String fx:value="no-user-registered"/>
+                                </styleClass>
+                            </Label>
+                            <Label fx:id="confirmation_username" alignment="CENTER" layoutX="17.0" layoutY="35.0"
+                                   prefHeight="24.0" prefWidth="242.0" styleClass="username" text="Karte auflegen"/>
+                            <GridPane layoutX="64.0" layoutY="60.0" prefHeight="46.0" prefWidth="148.0">
+                                <columnConstraints>
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="98.0" minWidth="10.0"
+                                                       prefWidth="84.0"/>
+                                    <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="88.0"
+                                                       minWidth="10.0" prefWidth="64.0"/>
+                                </columnConstraints>
+                                <rowConstraints>
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                </rowConstraints>
+                                <children>
+                                    <Label text="Guthaben:"/>
+                                    <Label fx:id="confirmation_credit" alignment="CENTER_RIGHT"
+                                           contentDisplay="RIGHT" text="0,00 €" GridPane.columnIndex="1"/>
+                                    <Label text="Kosten:" GridPane.rowIndex="1"/>
+                                    <Label fx:id="confirmation_cost" alignment="CENTER_RIGHT" contentDisplay="RIGHT"
+                                           text="0,00 €" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                                    <Label text="Verbleibend:" GridPane.rowIndex="2"/>
+                                    <Label fx:id="confirmation_remainingCredit" alignment="CENTER_RIGHT"
+                                           contentDisplay="RIGHT" text="0,00 €" GridPane.columnIndex="1"
+                                           GridPane.rowIndex="2"/>
+                                </children>
+                            </GridPane>
+                        </children>
+                    </Pane>
+                </center>
+                <bottom>
+                    <Label fx:id="confirmation_errorMessage" alignment="CENTER" prefHeight="0.0" prefWidth="292.0"
+                           text="Guthaben reicht nicht aus!" textFill="RED" BorderPane.alignment="CENTER">
+                        <font>
+                            <Font name="System Bold" size="13.0"/>
+                        </font>
+                        <opaqueInsets>
+                            <Insets/>
+                        </opaqueInsets>
+                        <BorderPane.margin>
+                            <Insets/>
+                        </BorderPane.margin>
+                        <padding>
+                            <Insets top="10.0"/>
+                        </padding>
+                    </Label>
+                </bottom>
+            </BorderPane>
+            <Button fx:id="confirmation_buttonDoor" layoutX="179.0" layoutY="193.0" mnemonicParsing="false"
+                    prefHeight="35.0" prefWidth="127.0" text="Tür öffnen"/>
+        </children>
+    </AnchorPane>
+    <AnchorPane fx:id="doorOpenPane" prefHeight="200.0" prefWidth="200.0" visible="false"
+                AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                AnchorPane.topAnchor="0.0">
+        <children>
+            <Button fx:id="door_buttonDone" defaultButton="true" layoutX="72.0" layoutY="191.0"
+                    mnemonicParsing="false" prefHeight="35.0" prefWidth="177.0" text="Fertig"
+                    AnchorPane.bottomAnchor="14.0"/>
+            <Label alignment="CENTER" layoutX="15.0" layoutY="133.0" prefHeight="17.0" prefWidth="292.0"
+                   text="Tür kann jetzt geöffnet werden" AnchorPane.bottomAnchor="79.0" AnchorPane.leftAnchor="15.0"
+                   AnchorPane.rightAnchor="13.0">
+                <font>
+                    <Font size="19.0"/>
+                </font>
+            </Label>
+            <Label alignment="BOTTOM_CENTER" layoutX="15.0" layoutY="31.0" prefHeight="49.0" prefWidth="292.0"
+                   text="">
+                <font>
+                    <Font size="67.0"/>
+                </font>
+                <styleClass>
+                    <String fx:value="icon"/>
+                    <String fx:value="icon-large"/>
+                </styleClass>
+            </Label>
+        </children>
+    </AnchorPane>
+    <AnchorPane fx:id="errorPane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #ffffff;"
+                visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <children>
+            <Label alignment="BASELINE_CENTER" layoutX="14.0" layoutY="14.0" prefHeight="35.0" prefWidth="292.0"
+                   text="">
+                <styleClass>
+                    <String fx:value="icon"/>
+                    <String fx:value="icon-error"/>
+                </styleClass>
+            </Label>
+            <Label fx:id="error_title" alignment="CENTER" layoutX="14.0" layoutY="68.0" prefHeight="32.0"
+                   prefWidth="292.0" text="Fehlerzustand" textFill="RED">
+                <font>
+                    <Font size="22.0"/>
+                </font>
+            </Label>
+            <Label fx:id="error_detail" alignment="TOP_LEFT" layoutX="14.0" layoutY="109.0" prefHeight="76.0"
+                   prefWidth="292.0" text="Hier steht die Fehlerbeschreibung." wrapText="true"/>
+            <Button fx:id="error_buttonCancel" cancelButton="true" disable="true" layoutX="14.0" layoutY="191.0"
+                    mnemonicParsing="false" text="&lt; Zurück" AnchorPane.bottomAnchor="14.0"
+                    AnchorPane.leftAnchor="14.0"/>
+            <Button fx:id="error_buttonRetry" defaultButton="true" disable="true" layoutX="181.0" layoutY="191.0"
+                    mnemonicParsing="false" text="Erneut versuchen" AnchorPane.bottomAnchor="14.0"
+                    AnchorPane.rightAnchor="14.0"/>
+        </children>
+    </AnchorPane>
+    <AnchorPane fx:id="waitPane" opacity="0.85" prefHeight="200.0" prefWidth="200.0"
+                style="-fx-background-color: #222222;" visible="false" AnchorPane.bottomAnchor="0.0"
+                AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <children>
+            <Label fx:id="startup_status1" alignment="CENTER" layoutX="14.0" layoutY="150.0" prefHeight="17.0"
+                   prefWidth="292.0" text="Bitte warten..." textFill="WHITE">
+                <font>
+                    <Font size="22.0"/>
+                </font>
+            </Label>
+            <Label alignment="CENTER" layoutX="14.0" layoutY="59.0" prefHeight="123.0" prefWidth="292.0" text=""
+                   textFill="WHITE">
+                <styleClass>
+                    <String fx:value="icon"/>
+                    <String fx:value="icon-large"/>
+                    <String fx:value="icon-light"/>
+                </styleClass>
+            </Label>
+        </children>
+    </AnchorPane>
+</AnchorPane>

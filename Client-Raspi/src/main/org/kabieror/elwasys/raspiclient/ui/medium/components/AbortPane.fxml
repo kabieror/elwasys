@@ -1,0 +1,30 @@
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Font?>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:id="confirmAbortionPane"
+            fx:controller="org.kabieror.elwasys.raspiclient.ui.medium.controller.AbortViewController"
+            visible="false">
+    <center>
+        <AnchorPane maxHeight="10" maxWidth="10">
+            <ImageView fitHeight="120.0" fitWidth="130.0" layoutX="95.0" layoutY="27.0" pickOnBounds="true"
+                       preserveRatio="true">
+                <Image url="@/img/warning.png"/>
+            </ImageView>
+            <ImageView fitHeight="76.0" fitWidth="92.0" layoutX="34.0" layoutY="27.0" pickOnBounds="true"
+                       preserveRatio="true">
+                <Image url="@/img/explosive.png"/>
+            </ImageView>
+            <ImageView fitHeight="87.0" fitWidth="87.0" layoutX="199.0" layoutY="27.0" pickOnBounds="true"
+                       preserveRatio="true">
+                <Image url="@/img/radioactive.png"/>
+            </ImageView>
+            <Label layoutX="55.0" layoutY="148.0" text="Abbruch bestätigen?">
+                <font>
+                    <Font size="23.0"/>
+                </font>
+            </Label>
+        </AnchorPane>
+    </center>
+</BorderPane>

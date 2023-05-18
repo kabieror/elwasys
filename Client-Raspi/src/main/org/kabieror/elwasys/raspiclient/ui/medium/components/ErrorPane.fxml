@@ -1,0 +1,38 @@
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import java.lang.String?>
+<GridPane xmlns:fx="http://javafx.com/fxml/1" fx:id="errorPane"
+          style="-fx-background-color: #ffffff;" alignment="CENTER"
+          fx:controller="org.kabieror.elwasys.raspiclient.ui.medium.controller.ErrorViewController"
+          visible="false">
+    <rowConstraints>
+        <RowConstraints valignment="BOTTOM"/>
+        <RowConstraints valignment="CENTER"/>
+        <RowConstraints valignment="CENTER" prefHeight="40"/>
+        <RowConstraints valignment="TOP"/>
+    </rowConstraints>
+    <columnConstraints>
+        <ColumnConstraints halignment="CENTER" hgrow="ALWAYS"/>
+    </columnConstraints>
+    <children>
+        <Label alignment="BASELINE_CENTER" GridPane.columnIndex="0" GridPane.rowIndex="0" prefHeight="35.0"
+               prefWidth="292.0"
+               text="">
+            <styleClass>
+                <String fx:value="icon"/>
+                <String fx:value="icon-error"/>
+            </styleClass>
+        </Label>
+        <Label fx:id="errorTitle" alignment="CENTER" prefHeight="32.0" GridPane.columnIndex="0"
+               GridPane.rowIndex="1"
+               prefWidth="292.0" text="Fehlerzustand" textFill="RED">
+            <font>
+                <Font size="22.0"/>
+            </font>
+        </Label>
+        <Label fx:id="errorDetail" alignment="CENTER" prefHeight="76.0" GridPane.columnIndex="0"
+               GridPane.rowIndex="3"
+               prefWidth="400.0" text="Hier steht die Fehlerbeschreibung." wrapText="true"/>
+    </children>
+</GridPane>

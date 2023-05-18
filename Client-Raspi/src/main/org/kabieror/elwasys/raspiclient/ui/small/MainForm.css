@@ -1,0 +1,128 @@
+/**
+ * Design des Hauptformulars der Anwendung.
+ * 
+ * @author Oliver Kabierschke
+ */
+
+@font-face {
+	font-family: 'FontAwesome';
+	src: url('/org/kabieror/elwasys/raspiclient/resources/fonts/fontawesome-webfont.ttf');
+}
+
+/**
+ * Icons
+ */
+.root{
+	-icons-color: rgb(61,114,144);
+	-icons-color-light: rgb(140, 200, 220);
+	-icons-color-white: rgb(255,255,255);
+	-icons-color-grey: rgb(150, 150, 150);
+	-icons-color-error: rgb(255, 0, 0);
+	
+	-color-error: rgb(230, 50, 50);
+	
+	-fx-font-size: 12px;
+}
+.icon{
+    -fx-font-family: FontAwesome;
+    -fx-font-size: 1em;
+	/*noinspection CssInvalidFunction*/
+	-fx-effect: innershadow(three-pass-box, derive(-icons-color, -70%), 0.1em, 0.0, 0.07em, 0.07em);
+	/*noinspection CssInvalidFunction*/
+	-fx-text-fill: linear-gradient(to bottom, derive(-icons-color, 20%) 10%, derive(-icons-color, -40%) 80%);
+}
+.icon-light {
+	/*noinspection CssInvalidFunction*/
+	-fx-effect: innershadow(three-pass-box, derive(-icons-color-light, -70%), 0.1em, 0.0, 0.07em, 0.07em);
+	/*noinspection CssInvalidFunction*/
+	-fx-text-fill: linear-gradient(to bottom, derive(-icons-color-light, 20%) 10%, derive(-icons-color-light, -40%) 80%);
+}
+.icon-medium {
+	-fx-font-size: 1.4em;
+}
+.icon-big {
+	-fx-font-size: 2em;
+}
+.icon-large {
+	-fx-font-size: 7em;
+	-fx-padding: 0;
+}
+.icon-error {
+	-fx-font-size: 4em;
+	-fx-effect: null;
+	-fx-text-fill: -icons-color-error;
+}
+
+.text-center {
+	-fx-text-alignment: center;
+}
+
+
+.button {
+	-fx-padding: .7em 1.4em;
+}
+
+.title {
+	-fx-font-size: 1.3em;
+}
+
+/**
+ * Device-List
+ */
+.device-list-item .caption {
+	-fx-font-size: 1em;
+}
+.device-list-item .price {
+	-fx-font-size: 0.8em;
+}
+.device-list-item:selected .icon {
+	-fx-text-fill: -icons-color-white;
+    -fx-effect: null;
+}
+.device-list-item .last-user {
+	-fx-font-size: .8em;
+}
+.device-list-item .icon {
+	-fx-text-origin: baseline;
+}
+
+.device-grid-pane {
+	-fx-fill: #fff;
+	-fx-padding: .1em;
+}
+.device-grid-cell {
+	-fx-background-color: #fff;
+	-fx-padding: .1em;
+}
+.device-grid-cell .label {
+	-fx-background-color: #48d;
+	-fx-text-fill: #fff;
+}
+.device-grid-detail-pane .label {
+	-fx-background-color: #8af;
+}
+.device-grid-cell.occupied .device-grid-detail-pane .label {
+	-fx-background-color: #b44;
+}
+.device-grid-cell.disabled .label {
+	-fx-background-color: #bbb;
+}
+.device-grid-cell.disabled .device-grid-detail-pane .label {
+	-fx-background-color: #ccc;
+}
+
+/**
+ * Program pane
+ */
+#confirmation-pane .username {
+	-fx-font-size: 1.4em;
+}
+#confirmation-pane .username.username-error {
+	-fx-text-fill: -color-error;
+}
+#confirmation-pane .no-user-registered {
+	-fx-text-fill: -icons-color-grey;
+}
+#confirmation-pane .remaining-error {
+	-fx-text-fill: -color-error;
+}

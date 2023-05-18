@@ -1,0 +1,667 @@
+/**
+ * Design des Hauptformulars der Anwendung.
+ * 
+ * @author Oliver Kabierschke
+ */
+
+.wants-space {
+    -fx-pref-height: infinity;
+    -fx-pref-width: infinity;
+}
+
+/**
+ * Icons
+ */
+.root {
+    -icons-color: rgb(61, 114, 144);
+    -icons-color-light: rgb(140, 200, 220);
+    -icons-color-white: rgb(255, 255, 255);
+    -icons-color-grey: rgb(150, 150, 150);
+    -icons-color-error: rgb(255, 0, 0);
+
+    -color-error: rgb(230, 50, 50);
+
+    -fx-font-size: 12px;
+    -fx-background-color: white;
+}
+
+.icon {
+    -fx-font-family: FontAwesome;
+    -fx-font-size: 1em;
+}
+
+.icon-basic {
+    -fx-font-family: FontAwesome;
+}
+
+.icon-light {
+    /*noinspection CssInvalidFunction*/
+    -fx-effect: innershadow(three-pass-box, derive(-icons-color-light, -70%), 0.1em, 0.0, 0.07em, 0.07em);
+    /*noinspection CssInvalidFunction*/
+    -fx-text-fill: linear-gradient(to bottom, derive(-icons-color-light, 20%) 10%, derive(-icons-color-light, -40%) 80%);
+}
+
+.icon-medium {
+    -fx-font-size: 1.4em;
+}
+
+.icon-big {
+    -fx-font-size: 2em;
+}
+
+.icon-large {
+    -fx-font-size: 7em;
+    -fx-padding: 0;
+}
+
+.icon-error {
+    -fx-font-size: 4em;
+    -fx-effect: null;
+    -fx-text-fill: -icons-color-error;
+}
+
+.text-center {
+    -fx-text-alignment: center;
+}
+
+.button {
+    -fx-padding: .7em 1.4em;
+}
+
+.button-icon {
+    -fx-padding: .2em 1.4em;
+    -fx-backgound: transparent
+}
+
+/**
+ * Main Layout
+ */
+.title {
+    -fx-font-size: 1.3em;
+}
+
+/**
+ * Toolbar
+ */
+.toolbar {
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 3, 0, 0, 0);
+    -fx-background-color: #4488dd;
+}
+
+.toolbar-button {
+    -fx-padding: .2em 2em;
+    -fx-background-color: transparent;
+    -fx-pref-height: 40;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+.toolbar-button .text-label {
+    -fx-text-fill: white;
+}
+
+.toolbar-button .icon {
+    -fx-text-fill: #ffffff;
+}
+
+.toolbar-button:pressed {
+    -fx-background-color: rgba(255, 255, 255, 0.4);
+}
+
+#cardUnknownNotice,
+#userBlockedNotice,
+#locationDisallowedNotice {
+    visibility: collapse;
+    -fx-background-color: #ff413c;
+    -fx-background-radius: 3;
+    -fx-padding: 5px 20px;
+}
+
+#cardUnknownNotice .icon,
+#cardUnknownNotice .text-label,
+#userBlockedNotice .icon,
+#userBlockedNotice .text-label,
+#locationDisallowedNotice .icon,
+#locationDisallowedNotice .text-label {
+    -fx-text-fill: #ffffff;
+    -fx-effect: none;
+    -fx-font-weight: bold;
+}
+
+.card-unknown #userButton,
+.user-blocked #userButton,
+.location-disallowed #userButton {
+    visibility: collapse;
+}
+
+.card-unknown #cardUnknownNotice,
+.user-blocked #userBlockedNotice,
+.location-disallowed #locationDisallowedNotice {
+    visibility: visible;
+}
+
+/**
+ * User-Settings
+ */
+.user-settings-dialog {
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 15, 0, 0, 2);
+    -fx-background-color: #fff;
+    -fx-border-color: #777;
+    -fx-border-width: 1;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+}
+
+.user-settings-dialog .detail-container {
+    -fx-padding: 6 10 4 10;
+}
+
+.user-settings-dialog .value-caption {
+    -fx-font-size: .8em;
+    -fx-font-weight: bold;
+    -fx-pref-width: 60;
+    -fx-alignment: center-right;
+}
+
+.user-settings-dialog .value {
+    -fx-font-size: 1.1em;
+}
+
+.user-settings-dialog .value-green {
+    -fx-font-size: 1.1em;
+    -fx-text-fill: #45a82b;
+    -fx-font-weight: bold;
+}
+
+.user-settings-dialog .value-code {
+    -fx-font-size: 1.1em;
+    -fx-font-family: "Consolas";
+}
+
+.user-settings-dialog .user-name {
+    -fx-font-size: 1.5em;
+    -fx-font-weight: lighter;
+}
+
+.user-settings-dialog .user-username {
+    -fx-text-fill: #666666;
+}
+
+.user-settings-dialog .user-credit {
+    -fx-font-size: 1.2em;
+}
+
+.user-settings-dialog .info-icon {
+    -fx-text-fill: #4488dd;
+}
+
+.user-settings-dialog #logoutButton {
+    -fx-pref-width: 1000;
+    -fx-background-color: #d23b28;
+    -fx-border-color: #be3525;
+}
+
+.user-settings-dialog #logoutButton Label {
+    -fx-text-fill: #fff;
+    -fx-font-weight: bold;
+}
+
+.user-settings-dialog #logoutButton .icon-basic {
+    -fx-font-size: 16;
+}
+
+.user-settings-dialog #logoutButton:pressed {
+    -fx-background-color: #eb3e29;
+    -fx-border-color: #d73828;
+}
+
+/**
+ * Device-List
+ */
+.devices-scroll-pane {
+    -fx-background-color: #ffffff;
+    -fx-border-color: transparent;
+    -fx-border-width: 0px;
+    -fx-padding: 0px;
+}
+
+.device-list-item-container {
+
+}
+.device-list-item {
+    -fx-pref-width: 196px;
+    -fx-max-width: 196px;
+    -fx-pref-height: infinity;
+
+    -fx-border-color: #94d966 transparent transparent transparent;
+    -fx-border-width: 8px 0 0 0;
+}
+
+.device-list-item.status-free.locked {
+    -fx-border-color: #aaaaaa transparent transparent transparent;
+}
+
+.device-list-item.status-door-opened {
+    -fx-border-color: #f1cb61 transparent transparent transparent;
+}
+
+.device-list-item.status-disabled {
+    -fx-border-color: #aaaaaa transparent transparent transparent;
+}
+
+.device-list-item.status-occupied,
+.device-list-item.status-error {
+    -fx-border-color: #f1666e transparent transparent transparent;
+}
+
+.device-info-container {
+    -fx-alignment: center;
+}
+
+/** Standard-Infos */
+.device-info-container > .caption {
+    -fx-font-weight: lighter;
+    -fx-font-size: 1.5em;
+    -fx-padding: 25px 5px 3px 5px;
+    -fx-alignment: center;
+}
+
+.device-info-container > .status {
+    -fx-font-size: 1em;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+    -fx-padding: 0 0 15px 0;
+}
+
+.status-free .device-info-container > .status {
+    -fx-text-fill: #53a22d;
+}
+
+.status-free.locked .device-info-container > .status {
+    -fx-text-fill: #888888;
+}
+
+.status-door-opened .device-info-container > .status {
+    -fx-text-fill: #ceaa2f;
+}
+
+.status-disabled .device-info-container > .status {
+    -fx-text-fill: #888888;
+}
+
+.status-occupied .device-info-container > .status,
+.status-error .device-info-container > .status {
+    -fx-text-fill: #c82a1c;
+}
+
+.device-info-container > .user-icon {
+    -fx-alignment: center;
+    -fx-font-size: 1.7em;
+    -fx-opacity: .7;
+}
+
+.device-info-container > .last-user {
+    -fx-font-size: 1em;
+    -fx-alignment: center;
+}
+
+/** Aktuelle Programm-Infos */
+.device-info-container > .remaining-time-caption,
+.device-info-container > .end-date-caption {
+    -fx-padding: 15 0 0 0;
+    -fx-font-size: .8em;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+}
+
+.device-info-container > .remaining-time-caption {
+    -fx-padding: 50 0 0 0;
+}
+
+.device-info-container > .remaining-time-container {
+    -fx-spacing: 5;
+    -fx-alignment: center;
+}
+
+.device-info-container > .remaining-time-container > .remaining-time-icon {
+    -fx-font-family: FontAwesome;
+    -fx-font-size: 1.2em;
+    -fx-opacity: .7;
+}
+
+.device-info-container > .remaining-time-container > .remaining-time {
+}
+
+.device-info-container > .end-date {
+    -fx-alignment: center;
+}
+
+#disabledLabel {
+    visibility: collapse;
+    -fx-padding: 20 5 3 5;
+    -fx-alignment: center;
+    -fx-text-alignment: center;
+    -fx-font-size: .9em;
+}
+
+.status-disabled #disabledLabel {
+    visibility: visible;
+}
+
+#errorLabel {
+    visibility: collapse;
+    -fx-padding: 20 5 3 5;
+    -fx-alignment: center;
+    -fx-text-alignment: center;
+    -fx-font-size: .9em;
+    -fx-text-fill: #c00;
+}
+
+.status-error #errorLabel {
+    visibility: visible;
+}
+
+.device-info-container > .remaining-time-caption,
+.device-info-container > .remaining-time-container,
+.device-info-container > .end-date-caption,
+.device-info-container > .end-date {
+    visibility: collapse;
+}
+
+.status-occupied .device-info-container > .remaining-time-caption,
+.status-occupied .device-info-container > .remaining-time-container,
+.status-occupied .device-info-container > .end-date-caption,
+.status-occupied .device-info-container > .end-date {
+    visibility: visible;
+}
+
+/** Knopf allgemein */
+.device-button-container {
+    -fx-alignment: center;
+}
+
+.device-button-container > .device-button {
+    -fx-background-color: #fefefe;
+    -fx-border-color: #ddd #ddd transparent #ddd;
+    -fx-border-width: 1 1 0 1;
+    -fx-padding: 15 10;
+    -fx-pref-width: 10000;
+    -fx-pref-height: 80;
+    -fx-alignment: center;
+    -fx-spacing: 6;
+    visibility: collapse;
+}
+
+.device-button-container > .device-button:pressed {
+    -fx-border-color: #4488dd #4488dd transparent #4488dd;
+    -fx-background-color: #88aaff;
+}
+
+.device-button-container > .device-button > .icon-basic {
+    -fx-font-size: 20;
+}
+
+.device-button-container > .device-button > .caption {
+    -fx-font-size: 10;
+}
+
+.device-button-container > .device-button:pressed > .icon-basic,
+.device-button-container > .device-button:pressed > .caption {
+    -fx-text-fill: #ffffff;
+}
+
+/** Tür-Button */
+.device-button-container > .door-open-button {
+}
+
+.device-button-container > .door-open-button > .icon-basic {
+}
+
+.device-button-container > .door-open-button:pressed {
+    -fx-background-color: #9be981;
+    -fx-border-color: #77d76b;
+}
+
+.status-free .device-button-container > .door-open-button,
+.status-disabled .device-button-container > .door-open-button {
+    visibility: visible;
+}
+
+/** Tür-Status */
+.device-button-container > .door-open-status {
+    -fx-background-color: #4fc32e;
+    -fx-border-color: #45a82b;
+}
+
+.device-button-container > .door-open-status:pressed {
+    -fx-background-color: #5ae933;
+    -fx-border-color: #50d72e;
+}
+
+.device-button-container > .door-open-status > .caption {
+    -fx-text-fill: #fff;
+    -fx-font-size: 30;
+}
+
+.status-door-opened .device-button-container > .door-open-status {
+    visibility: visible;
+}
+
+/** Select-Button */
+.device-button-container > .select-button {
+    -fx-padding: 35 10;
+}
+
+.device-button-container > .select-button > .icon-basic {
+    -fx-text-fill: #4488dd;
+    -fx-font-size: 30;
+}
+
+.device-button-container > .select-button > .caption {
+    -fx-text-fill: #4488dd;
+}
+
+.status-free .device-button-container > .select-button,
+.status-door-opened .device-button-container > .select-button,
+.status-disabled .device-button-container > .select-button {
+    visibility: visible;
+}
+
+/** Abbrechen-Button */
+.device-button-container > .abort-button {
+    visibility: collapse;
+    -fx-background-color: #d23b28;
+    -fx-border-color: #be3525;
+}
+
+.device-button-container > .abort-button:pressed {
+    -fx-background-color: #eb3e29;
+    -fx-border-color: #d73828;
+}
+
+.device-button-container > .abort-button > .icon-basic {
+    -fx-text-fill: #ffffff;
+}
+
+.device-button-container > .abort-button > .caption {
+    -fx-text-fill: #ffffff;
+}
+
+/** Status: Gerät besetzt: Button einblenden */
+.status-occupied .device-button-container > .abort-button {
+    visibility: visible;
+}
+
+/** Status: Fehler */
+
+.status-error #errorInfoButton,
+.status-error #errorRetryButton {
+    visibility: visible;
+}
+
+
+/**
+ * Bestätigungsseite
+ */
+
+/* Programmliste */
+.program-entry {
+    -fx-border-color: transparent transparent #cccccc transparent;
+    -fx-padding: 5 8;
+}
+
+.program-entry.selected {
+    -fx-background-color: #b9cfff;
+    -fx-text-fill: #ffffff;
+    -fx-border-color: transparent transparent #97b2ff transparent;
+}
+
+.program-entry > .icon {
+    -fx-padding: 5 8 5 3;
+    -fx-min-width: 45;
+    -fx-alignment: center-left;
+}
+
+.program-entry .name {
+    -fx-font-size: 1.4em;
+    -fx-alignment: center-left;
+}
+
+.program-entry .price {
+    -fx-font-size: .9em;
+    -fx-alignment: center-right;
+    -fx-min-width: 40;
+}
+
+.program-entry .key-value-pair {
+    -fx-alignment: center-left;
+}
+
+.program-entry .key-value-pair .key-label {
+    -fx-font-size: .8em;
+    -fx-text-fill: #666666;
+    -fx-padding: 0 5 0 0;
+}
+
+.program-entry .key-value-pair .value-label {
+}
+
+#confirmationPane .title {
+    -fx-font-size: 1.6em;
+    -fx-text-fill: #4488dd;
+    -fx-font-weight: lighter;
+    -fx-padding: 5px 0 15px 0;
+}
+
+#confirmationPane.program-selected .program-notice {
+    visibility: hidden;
+}
+
+#confirmationPane.program-selected .confirm-details {
+    visibility: visible;
+}
+
+#confirmationPane .confirm-details {
+    -fx-padding: 5 15 15 15;
+}
+
+#confirmationPane .auto-end-notice {
+    visibility: collapse;
+}
+
+#confirmationPane.auto-end .auto-end-notice {
+    visibility: visible;
+    -fx-font-size: .8em;
+}
+
+#creditCalculation {
+    -fx-alignment: center;
+}
+
+#creditCalculation .calc-value {
+    -fx-padding: 0 0 0 10;
+}
+
+#creditCalculation .calc-operator {
+    -fx-padding: 0 10 0 0;
+    -fx-font-family: Symbol;
+}
+
+#creditCalculation .calc-result {
+    -fx-font-weight: bold;
+}
+
+.credit-insufficient #creditCalculation .calc-result {
+    -fx-text-fill: #e22;
+}
+
+#creditCalculation .credit-insufficient-note {
+    visibility: hidden;
+}
+
+.credit-insufficient #creditCalculation .credit-insufficient-note {
+    visibility: visible;
+    -fx-text-fill: #e22;
+}
+
+#creditCalculation > .result-line {
+    -fx-pref-width: 150;
+    -fx-border-color: #444444 transparent;
+    -fx-font-size: 1;
+    -fx-padding: 0;
+}
+
+#confirmationPane .email-notification-checkbox {
+    -fx-alignment: center;
+    -fx-padding: 0 0 15 0;
+}
+
+#confirmationPane.email-not-set .email-notification-checkbox {
+    visibility: collapse;
+}
+
+#confirmationPane .email-notification-note {
+    visibility: collapse;
+    -fx-alignment: center;
+    -fx-padding: 0 0 15 0;
+}
+
+#confirmationPane.email-not-set .email-notification-note {
+    visibility: visible;
+}
+
+#confirmationPane .ionic-notification-checkbox {
+    -fx-alignment: center;
+    -fx-padding: 0 0 15 0;
+}
+
+#confirmationPane.app-not-connected .ionic-notification-checkbox {
+    visibility: collapse;
+}
+
+#ionicNotificationErrorNote {
+    visibility: collapse;
+    -fx-alignment: center;
+    -fx-padding: 0 0 15 0;
+}
+
+#confirmationPane.app-not-connected #ionicNotificationErrorNote {
+    visibility: visible;
+}
+
+#confirmationPane .ionic-notification-authkey {
+    -fx-font-family: Consolas;
+}
+
+#confirmationPane .more-info-note {
+    -fx-alignment: center;
+    -fx-text-alignment: center;
+}
+
+#confirmationPane .more-info-username-caption {
+    -fx-font-size: .9em;
+}
+
+#confirmationPane .more-info-username {
+    -fx-font-weight: bold;
+}
+

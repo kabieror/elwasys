@@ -1,0 +1,97 @@
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:id="confirmationPane"
+            fx:controller="org.kabieror.elwasys.raspiclient.ui.medium.controller.ConfirmationViewController"
+            visible="false">
+    <VBox AnchorPane.leftAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.rightAnchor="500"
+          AnchorPane.topAnchor="0">
+        <ScrollPane fitToWidth="true" prefHeight="1000" VBox.vgrow="ALWAYS">
+            <VBox fx:id="programsContainer"/>
+        </ScrollPane>
+    </VBox>
+    <BorderPane AnchorPane.topAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0"
+                AnchorPane.leftAnchor="300" styleClass="program-notice">
+        <center>
+            <Label text="Bitte Programm auswählen"/>
+        </center>
+    </BorderPane>
+    <BorderPane AnchorPane.topAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0"
+                AnchorPane.leftAnchor="300"
+                styleClass="confirm-details" visible="false">
+        <top>
+            <VBox>
+                <Label text="${controller.titleText}" styleClass="title"/>
+
+                <HBox spacing="10">
+                    <Label text="Späteste Abschaltung:"/>
+                    <Label text="${controller.latestEnd}"/>
+                </HBox>
+                <Label fx:id="autoEndNotice"
+                       text="Der Strom des Gerätes wird zu diesem Zeitpunkt ohne Rücksicht auf dessen Zustand ausgeschaltet."
+                       styleClass="auto-end-notice" managed="${autoEndNotice.visible}" wrapText="true"/>
+            </VBox>
+        </top>
+
+        <center>
+            <GridPane fx:id="creditCalculation">
+                <columnConstraints>
+                    <ColumnConstraints/>
+                    <ColumnConstraints/>
+                    <ColumnConstraints halignment="RIGHT"/>
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints/>
+                    <RowConstraints/>
+                    <RowConstraints/>
+                    <RowConstraints/>
+                    <RowConstraints/>
+                </rowConstraints>
+                <Label text="Guthaben" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                <Label text="${controller.userCredit}" GridPane.rowIndex="0" GridPane.columnIndex="2"
+                       styleClass="credit, calc-value"/>
+
+                <Label text="-" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="calc-operator"/>
+                <Label text="Kosten" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                <Label text="${controller.maxPrice}" GridPane.rowIndex="1" GridPane.columnIndex="2"
+                       styleClass="max-price, calc-value"/>
+
+                <Label GridPane.rowIndex="2" GridPane.columnIndex="1" GridPane.columnSpan="2" styleClass="result-line"
+                       GridPane.halignment="RIGHT"/>
+
+                <Label text="${controller.remainingCredit}" GridPane.rowIndex="3" GridPane.columnIndex="2"
+                       styleClass="calc-result"/>
+
+                <Label text="Guthaben reicht nicht aus" GridPane.rowIndex="4" GridPane.columnIndex="1"
+                       GridPane.columnSpan="2" styleClass="credit-insufficient-note" GridPane.halignment="RIGHT"/>
+            </GridPane>
+        </center>
+
+        <bottom>
+            <VBox alignment="CENTER">
+                <CheckBox fx:id="emailNotificationCheckBox" text="${controller.emailNotificationText}"
+                          styleClass="email-notification-checkbox" managed="${emailNotificationCheckBox.visible}"/>
+                <Label fx:id="emailNotificationErrorNote"
+                       text="Für Email-Benachrichtigungen bitte Email-Adresse im Waschportal eintragen."
+                       styleClass="email-notification-note" managed="${emailNotificationErrorNote.visible}"/>
+
+                <CheckBox fx:id="ionicNotificationCheckBox" text="${controller.ionicNotificationText}"
+                          styleClass="ionic-notification-checkbox" managed="${ionicNotificationCheckBox.visible}"/>
+                <VBox fx:id="ionicNotificationErrorNote" managed="${ionicNotificationErrorNote.visible}">
+                    <Label text="Für Push-Benachrichtigungen bitte elwaApp herunterladen."
+                           styleClass="ionic-notification-note"/>
+                    <HBox alignment="CENTER">
+                        <Label text="Dein Auth-Key: " />
+                        <Label text="${controller.authKey}" styleClass="ionic-notification-authkey"/>
+                    </HBox>
+                </VBox>
+                <Label text="${controller.moreInfoText}"
+                       styleClass="more-info-note"
+                       wrapText="true"/>
+                <HBox spacing="6" alignment="CENTER">
+                    <Label text="Dein Benutzername im Waschportal:" styleClass="more-info-username-caption"/>
+                    <Label text="${controller.registeredUserUserName}" styleClass="more-info-username"/>
+                </HBox>
+            </VBox>
+        </bottom>
+    </BorderPane>
+</AnchorPane>

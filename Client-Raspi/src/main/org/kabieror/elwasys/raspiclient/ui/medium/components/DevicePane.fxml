@@ -1,0 +1,9 @@
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.*?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:id="devicesPane" visible="false"
+            fx:controller="org.kabieror.elwasys.raspiclient.ui.medium.controller.DeviceViewController">
+    <ScrollPane AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
+                AnchorPane.topAnchor="0" styleClass="devices-scroll-pane" fitToHeight="true">
+        <HBox fx:id="devicesContainer" spacing="5"/>
+    </ScrollPane>
+</AnchorPane>

@@ -1,0 +1,70 @@
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<GridPane xmlns:fx="http://javafx.com/fxml" styleClass="device-list-item, status-free"
+          fx:controller="org.kabieror.elwasys.raspiclient.ui.medium.controller.DeviceListEntry"
+          fx:id="deviceListEntry">
+    <rowConstraints>
+        <RowConstraints/>
+        <RowConstraints vgrow="ALWAYS"/>
+        <RowConstraints/>
+    </rowConstraints>
+    <columnConstraints>
+        <ColumnConstraints hgrow="ALWAYS" halignment="CENTER"/>
+    </columnConstraints>
+    <VBox styleClass="device-info-container" GridPane.rowIndex="0">
+        <Label text="${controller.deviceName}" styleClass="caption"/>
+        <Label text="${controller.statusText}" styleClass="status"/>
+
+        <Label text="" styleClass="icon, icon-big, user-icon"/>
+        <Label text="${controller.lastUserName}" styleClass="last-user"/>
+
+        <Label fx:id="remainingCaption" text="Verbleibend" styleClass="remaining-time-caption"
+               managed="${remainingCaption.visible}"/>
+        <HBox fx:id="remainingContainer" GridPane.rowIndex="5" styleClass="remaining-time-container"
+              managed="${remainingContainer.visible}">
+            <Label text="" styleClass="remaining-time-icon"/>
+            <Label text="${controller.remainingTime}" styleClass="remaining-time"/>
+        </HBox>
+
+        <Label fx:id="endDateCaption" text="Ende" styleClass="end-date-caption" managed="${endDateCaption.visible}"/>
+        <Label fx:id="endDateLabel" text="${controller.endDate}" styleClass="end-date"
+               managed="${endDateLabel.visible}"/>
+
+        <Label fx:id="errorLabel" text="${controller.errorText}" managed="${errorLabel.visible}" wrapText="true"/>
+
+        <Label fx:id="disabledLabel" text="${controller.disabledText}" managed="${disabledLabel.visible}"
+               wrapText="true"/>
+    </VBox>
+
+    <VBox GridPane.rowIndex="2" styleClass="device-button-container">
+        <VBox fx:id="doorOpenButton" styleClass="device-button, door-open-button"
+              onMouseClicked="#onOpenDoor" managed="${doorOpenButton.visible}">
+            <Label styleClass="icon-basic" text=""/>
+            <Label styleClass="caption" text="Tür freigeben"/>
+        </VBox>
+        <VBox fx:id="doorStatusButton" styleClass="device-button, door-open-status"
+              onMouseClicked="#onCancelDoorOpened" managed="${doorStatusButton.visible}">
+            <Label styleClass="caption" text="${controller.remainingTime}"/>
+        </VBox>
+        <VBox fx:id="selectButton" styleClass="device-button, select-button"
+              onMouseClicked="#onSelectDevice" managed="${selectButton.visible}" disable="true">
+            <Label styleClass="icon-basic" text=""/>
+            <Label styleClass="caption" text="Gerät buchen"/>
+        </VBox>
+        <VBox fx:id="abortButton" styleClass="device-button, abort-button, red-button"
+              onMouseClicked="#onConfirmCancelExecution" managed="${abortButton.visible}">
+            <Label styleClass="icon-basic" text=""/>
+            <Label styleClass="caption" text="Abbrechen"/>
+        </VBox>
+        <VBox fx:id="errorInfoButton" styleClass="device-button, red-button"
+              onMouseClicked="#onErrorInfo" managed="${errorInfoButton.visible}">
+            <Label styleClass="icon-basic" text=""/>
+            <Label styleClass="caption" text="Fehler anzeigen"/>
+        </VBox>
+        <VBox fx:id="errorRetryButton" styleClass="device-button, red-button"
+              onMouseClicked="#onErrorRetry" managed="${errorRetryButton.visible}">
+            <Label styleClass="icon-basic" text=""/>
+            <Label styleClass="caption" text="Neu versuchen"/>
+        </VBox>
+    </VBox>
+</GridPane>

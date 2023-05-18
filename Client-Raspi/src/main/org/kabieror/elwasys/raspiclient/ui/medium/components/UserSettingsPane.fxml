@@ -1,0 +1,45 @@
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<HBox xmlns:fx="http://javafx.com/fxml/1" fx:id="userSettingsPane" visible="false"
+      fx:controller="org.kabieror.elwasys.raspiclient.ui.medium.controller.UserSettingsViewController"
+      alignment="TOP_CENTER">
+    <HBox fx:id="userSettingsContent" AnchorPane.topAnchor="0" prefWidth="300" maxHeight="10" styleClass="user-settings-dialog">
+        <VBox HBox.hgrow="ALWAYS" spacing="8">
+            <VBox styleClass="detail-container">
+                <HBox spacing="5" alignment="CENTER_LEFT" style="-fx-padding: 8 0 0 0">
+                    <Label text="${controller.name}" styleClass="user-name"/>
+                    <Label text="${controller.username}" styleClass="user-username"/>
+                </HBox>
+                <HBox spacing="5" alignment="CENTER_LEFT" style="-fx-padding: 8 0 0 0">
+                    <Label text="Guthaben:" styleClass="value-caption"/>
+                    <Label text="${controller.credit}" styleClass="user-credit" HBox.hgrow="ALWAYS"/>
+                </HBox>
+                <HBox spacing="5" alignment="CENTER_LEFT" style="-fx-padding: 3 0 0 0">
+                    <Label text="Email:" styleClass="value-caption"/>
+                    <Label text="${controller.email}" styleClass="value"/>
+                </HBox>
+                <HBox fx:id="authKeyInfo" managed="${authKeyInfo.visible}" spacing="5" alignment="CENTER_LEFT"
+                      style="-fx-padding: 3 0 0 0">
+                    <Label text="Auth-Key:" styleClass="value-caption"/>
+                    <Label text="${controller.authKey}" styleClass="value-code"/>
+                    <Label text="" styleClass="icon-basic,info-icon"
+                           onMouseClicked="#onAuthKeyInfo"/> <!-- fa-question-circle -->
+                </HBox>
+                <HBox fx:id="appConnectionInfo" managed="${appConnectionInfo.visible}" visible="false" spacing="5"
+                      alignment="CENTER_LEFT"
+                      style="-fx-padding: 3 0 0 0">
+                    <Label text="elwaApp:" styleClass="value-caption"/>
+                    <Label text="verbunden" styleClass="value-green" />
+                </HBox>
+            </VBox>
+            <Button fx:id="logoutButton" onAction="#onLogout" alignment="BOTTOM_CENTER">
+                <graphic>
+                    <HBox spacing="4" alignment="CENTER">
+                        <Label text="" styleClass="icon-basic"/> <!-- fa-sign-out -->
+                        <Label text="Abmelden"/>
+                    </HBox>
+                </graphic>
+            </Button>
+        </VBox>
+    </HBox>
+</HBox>

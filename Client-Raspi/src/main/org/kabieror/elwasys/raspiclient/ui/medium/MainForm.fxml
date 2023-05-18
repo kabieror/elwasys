@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?scenebuilder-stylesheet @MainForm.css?>
+
+<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" styleClass="root" xmlns="http://javafx.com/javafx/8"
+            fx:controller="org.kabieror.elwasys.raspiclient.ui.medium.MainFormController">
+    <stylesheets>
+        <URL value="@MainForm.css"/>
+    </stylesheets>
+    <children>
+
+        <!-- Startup -->
+        <fx:include fx:id="startupPane" source="components/StartupPane.fxml" AnchorPane.bottomAnchor="25"
+                    AnchorPane.leftAnchor="0.0"
+                    AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40"/>
+
+        <!-- Device Selection -->
+        <fx:include fx:id="devicesPane" source="components/DevicePane.fxml" AnchorPane.bottomAnchor="25"
+                    AnchorPane.leftAnchor="0.0"
+                    AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40"/>
+
+        <!-- Abort -->
+        <fx:include fx:id="abortPane" source="components/AbortPane.fxml" AnchorPane.bottomAnchor="25"
+                    AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40"/>
+
+        <!-- Confirmation -->
+        <fx:include fx:id="confirmationPane" source="components/ConfirmationPane.fxml" AnchorPane.bottomAnchor="25"
+                    AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40"/>
+
+        <!-- App-Advertisement -->
+        <fx:include fx:id="appAdvertisement" source="components/AppInfoPane.fxml" AnchorPane.leftAnchor="0"
+                    AnchorPane.bottomAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="40"/>
+
+        <!-- Fehler-Panel -->
+        <fx:include fx:id="errorPane" source="components/ErrorPane.fxml" AnchorPane.bottomAnchor="25"
+                    AnchorPane.leftAnchor="0.0"
+                    AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40"/>
+
+        <!-- Copyright & Version -->
+        <fx:include source="components/CopyrightBar.fxml" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0"
+                    AnchorPane.rightAnchor="0"/>
+
+        <!-- Toolbar -->
+        <fx:include fx:id="toolbarPane" source="components/ToolbarPane.fxml" AnchorPane.leftAnchor="0"
+                    AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0"/>
+
+        <!-- User-Settings -->
+        <fx:include fx:id="userSettings" source="components/UserSettingsPane.fxml" AnchorPane.leftAnchor="0"
+                    AnchorPane.topAnchor="40"
+                    AnchorPane.bottomAnchor="0" AnchorPane.rightAnchor="0"/>
+
+        <!-- Wait Pane -->
+        <fx:include fx:id="waitPane" source="components/WaitPane.fxml" AnchorPane.bottomAnchor="0.0"
+                    AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+
+
+    </children>
+</AnchorPane>

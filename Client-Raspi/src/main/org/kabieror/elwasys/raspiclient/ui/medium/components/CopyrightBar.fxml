@@ -1,0 +1,16 @@
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.*?>
+<GridPane xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="org.kabieror.elwasys.raspiclient.ui.medium.controller.CopyrightBarController"
+          prefHeight="25" alignment="CENTER"
+          prefWidth="10000"
+          style="-fx-background-color: #eee;
+                -fx-border-color: #ccc transparent transparent transparent;
+                -fx-padding: 2 6;">
+    <columnConstraints>
+        <ColumnConstraints halignment="LEFT" hgrow="ALWAYS"/>
+        <ColumnConstraints halignment="RIGHT" hgrow="ALWAYS"/>
+    </columnConstraints>
+    <Label text="${controller.versionText}" style="-fx-font-size: .8em; -fx-text-fill: #444;" GridPane.columnIndex="0"/>
+    <Label text="© 2018 Oliver Kabierschke" style="-fx-font-size: .8em; -fx-text-fill: #444;" GridPane.columnIndex="1"/>
+</GridPane>

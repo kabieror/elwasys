@@ -1,0 +1,14 @@
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<VBox xmlns:fx="http://javafx.com/fxml/1" fx:id="waitPane" opacity="0.85"
+      style="-fx-background-color: #222222;" visible="false" alignment="CENTER"
+      fx:controller="org.kabieror.elwasys.raspiclient.ui.medium.controller.WaitPaneController">
+    <Label text=""
+           textFill="WHITE" styleClass="icon, icon-large, icon-light"/>
+    <Label text="Bitte warten..." textFill="WHITE">
+        <font>
+            <Font size="22.0"/>
+        </font>
+    </Label>
+</VBox>

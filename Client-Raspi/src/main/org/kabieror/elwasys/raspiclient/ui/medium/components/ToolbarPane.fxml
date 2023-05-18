@@ -1,0 +1,78 @@
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.lang.*?>
+<GridPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="40" prefHeight="40" styleClass="toolbar"
+          fx:controller="org.kabieror.elwasys.raspiclient.ui.medium.controller.ToolbarPaneController">
+    <rowConstraints>
+        <RowConstraints valignment="CENTER" vgrow="SOMETIMES"/>
+    </rowConstraints>
+    <columnConstraints>
+        <ColumnConstraints halignment="LEFT" percentWidth="33"/>
+        <ColumnConstraints halignment="CENTER" percentWidth="33"/>
+        <ColumnConstraints halignment="RIGHT" percentWidth="33"/>
+    </columnConstraints>
+    <!-- Left Pane -->
+    <HBox prefHeight="40" GridPane.columnIndex="0" GridPane.rowIndex="0" alignment="CENTER_LEFT">
+        <Button fx:id="backButton">
+            <styleClass>
+                <String fx:value="toolbar-button"/>
+            </styleClass>
+            <graphic>
+                <HBox spacing="10" alignment="CENTER">
+                    <Label text=""> <!-- fa-chevron-left -->
+                        <styleClass>
+                            <String fx:value="icon-medium"/>
+                            <String fx:value="icon"/>
+                        </styleClass>
+                    </Label>
+                    <Label fx:id="backButtonText" styleClass="text-label"/>
+                </HBox>
+            </graphic>
+        </Button>
+    </HBox>
+
+    <!-- Center Pane -->
+    <HBox fx:id="userInfo" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.hgrow="SOMETIMES" alignment="CENTER">
+        <Button fx:id="userButton" managed="${userButton.visible}" styleClass="toolbar-button" onAction="#onUserClick">
+            <graphic>
+                <HBox spacing="10" alignment="CENTER">
+                    <Label text="" styleClass="icon, icon-medium"/> <!-- fa-user -->
+                    <Label text="${controller.userName}" fx:id="userButtonText" styleClass="text-label"/>
+                </HBox>
+            </graphic>
+        </Button>
+        <HBox fx:id="cardUnknownNotice" alignment="CENTER" spacing="10" managed="${cardUnknownNotice.visible}">
+            <Label text="" styleClass="icon, icon-medium"/> <!-- fa-question-cicle -->
+            <Label text="Karte unbekannt" styleClass="text-label"/>
+        </HBox>
+        <HBox fx:id="userBlockedNotice" alignment="CENTER" spacing="10" managed="${userBlockedNotice.visible}">
+            <Label text="" styleClass="icon, icon-medium"/> <!-- fa-close -->
+            <Label text="Karte gesperrt" styleClass="text-label"/>
+        </HBox>
+        <HBox fx:id="locationDisallowedNotice" alignment="CENTER" spacing="10"
+              managed="${locationDisallowedNotice.visible}">
+            <Label text="" styleClass="icon, icon-medium"/> <!-- fa-close -->
+            <Label text="Unzulässig" styleClass="text-label"/>
+        </HBox>
+    </HBox>
+
+    <!-- Right Pane -->
+    <HBox GridPane.columnIndex="2" GridPane.rowIndex="0" alignment="CENTER_RIGHT">
+        <Button fx:id="forwardButton">
+            <styleClass>
+                <String fx:value="toolbar-button"/>
+            </styleClass>
+            <graphic>
+                <HBox spacing="10" alignment="CENTER">
+                    <Label fx:id="forwardButtonText" styleClass="text-label"/>
+                    <Label text=""> <!-- fa-chevron-right -->
+                        <styleClass>
+                            <String fx:value="icon-medium"/>
+                            <String fx:value="icon"/>
+                        </styleClass>
+                    </Label>
+                </HBox>
+            </graphic>
+        </Button>
+    </HBox>
+</GridPane>
