@@ -28,3 +28,5 @@ target/
 .idea/
 
 elwasys.properties
+
+.client-uid
