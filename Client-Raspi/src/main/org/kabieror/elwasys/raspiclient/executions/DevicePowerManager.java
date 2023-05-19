@@ -6,6 +6,8 @@ import org.kabieror.elwasys.raspiclient.application.ElwaManager;
 import org.kabieror.elwasys.raspiclient.application.ICloseListener;
 import org.kabieror.elwasys.raspiclient.application.Main;
 import org.kabieror.elwasys.raspiclient.configuration.WashguardConfiguration;
+import org.kabieror.elwasys.raspiclient.devices.DevicePowerState;
+import org.kabieror.elwasys.raspiclient.devices.IDevicePowerManager;
 import org.kabieror.elwasys.raspiclient.io.TelnetClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +25,7 @@ import java.util.regex.Pattern;
  * @author Oliver Kabierschke
  */
 @SuppressWarnings("FieldCanBeLocal")
-public class DevicePowerManager implements ICloseListener {
+public class DevicePowerManager implements IDevicePowerManager, ICloseListener {
 
     /**
      * Sperre für die gleichzeitige Ausführung von Telnet-Anfragen.
@@ -94,6 +96,134 @@ public class DevicePowerManager implements ICloseListener {
             this.logger
                     .warn("Starting in dry mode without setting power of physical devices. Remove the '-dry' argument" +
                             " to go to production mode.");
+        }
+    }
+
+    /**
+     * Switches the power of a device on.
+     *
+     * @param device The device to switch on.
+     * @throws InterruptedException
+     */
+    @Override
+    public void setDevicePowerState(Device device, DevicePowerState newState)
+            throws IOException, InterruptedException, FhemException {
+        synchronized (TELNET_LOCK) {
+            if (newState != DevicePowerState.ON && newState != DevicePowerState.OFF) {
+                throw new IllegalArgumentException("Der neue Zustand eines Geräts muss entweder ON oder OFF sein.");
+            }
+            if (Main.dry) {
+                return;
+            }
+            if (!this.checkConnection()) {
+                this.openFhemConnection();
+            }
+
+            // Setze Zustand
+            this.telnetFhem.emptyResponseBuffer();
+            String setCommand = "set " + device.getFhemSwitchName() + " " + newState.name().toLowerCase();
+            this.telnetFhem.sendCommand(setCommand);
+
+            // Check response from server. If it is empty, the command has been
+            // executed.
+            final String res = this.telnetFhem
+                    .waitForResponse(this.minimumTimeout.multipliedBy(2).getNano(), TimeUnit.NANOSECONDS);
+            if (res != null && !res.isEmpty()) {
+                throw new IOException("Konnte die Stromversorgung des Geräts " + device.getName() +
+                        " nicht setzen. Antwort des FHEM-Servers: '" + res + "'");
+            } else {
+                // Ensure that the action has been successful
+                DevicePowerState actualState = DevicePowerState.UNKNOWN;
+                for (int i = 0; i < this.checkStatusRetryCount; i++) {
+                    // Repeat checking the state for a fixed count of repetitions
+                    // before throwing an exception
+                    try {
+                        Thread.sleep(this.checkStatusDelay);
+                    } catch (final InterruptedException e1) {
+                        this.logger.warn("Interrupted while checking the power state.", e1);
+                        throw new IOException("Unterbrechung während dem prüfen des neuen Zustands.", e1);
+                    }
+
+                    // Check the state
+                    actualState = this.getState(device);
+                    if (actualState == newState) {
+                        break;
+                    }
+                    if (actualState == DevicePowerState.ON || actualState == DevicePowerState.OFF) {
+                        // Server hat den Befehl nicht empfangen. Wiederhole ihn.
+                        this.telnetFhem.sendCommand(setCommand);
+                    }
+                    // If the state is not the intended one, continue checking.
+                }
+                if (actualState != newState) {
+                    // If the state is not the intended one, throw an exception.
+                    String stateString;
+                    try {
+                        stateString = this.getRawState(device);
+                        if (stateString == null || stateString.isEmpty()) {
+                            stateString = "";
+                        } else {
+                            stateString = " Sein aktueller Zustand: " + stateString + ".";
+                        }
+                    } catch (final IOException e) {
+                        stateString = "";
+                    }
+                    this.logger
+                            .error("Could not set the power state of device " + device.getName() + "." + stateString);
+                    throw new IOException(
+                            "Konnte die Stromversorgung des Geräts " + device.getName() + " nicht setzen." +
+                                    stateString);
+                }
+            }
+        }
+    }
+
+    /**
+     * Looks up the power state of a device.
+     *
+     * @param device Der Gerät, dessen Status geholt werden soll.
+     * @return The power state of the device.
+     */
+    @Override
+    public DevicePowerState getState(Device device) throws InterruptedException, FhemException, IOException {
+        if (Main.dry) {
+            return DevicePowerState.UNKNOWN;
+        }
+
+        synchronized (TELNET_LOCK) {
+            if (!this.checkConnection()) {
+                this.openFhemConnection();
+            }
+            this.telnetFhem.emptyResponseBuffer();
+            this.telnetFhem.sendCommand("get " + device.getFhemSwitchName() + " param state");
+            final String stateString = this.telnetFhem.waitForResponse(this.defaultTimeout, TimeUnit.MILLISECONDS);
+            switch (stateString) {
+                case "on":
+                    return DevicePowerState.ON;
+                case "off":
+                    return DevicePowerState.OFF;
+                case "set_on":
+                    return DevicePowerState.SET_ON;
+                case "set_off":
+                    return DevicePowerState.SET_OFF;
+                default:
+                    return DevicePowerState.UNKNOWN;
+            }
+        }
+    }
+
+    /**
+     * Closes the connection to the fhem server.
+     */
+    @Override
+    public void onClose(boolean restart) {
+        this.logger.debug("Shutting down DevicePowerManager");
+        if (this.telnetFhem != null && this.telnetFhem.isAlive()) {
+            this.telnetFhem.shutdown();
+        }
+        this.eventsReceiverThread.interrupt();
+        if (this.telnetFhemEvents != null && this.telnetFhemEvents.isAlive()) {
+            this.telnetFhemEvents.shutdown();
         }
     }
 
@@ -308,132 +438,6 @@ public class DevicePowerManager implements ICloseListener {
     }
 
     /**
-     * Closes the connection to the fhem server.
-     */
-    @Override
-    public void onClose(boolean restart) {
-        this.logger.debug("Shutting down DevicePowerManager");
-        if (this.telnetFhem != null && this.telnetFhem.isAlive()) {
-            this.telnetFhem.shutdown();
-        }
-        this.eventsReceiverThread.interrupt();
-        if (this.telnetFhemEvents != null && this.telnetFhemEvents.isAlive()) {
-            this.telnetFhemEvents.shutdown();
-        }
-    }
-
-    /**
-     * Switches the power of a device on.
-     *
-     * @param device The device to switch on.
-     * @throws InterruptedException
-     */
-    void setDevicePowerState(Device device, DevicePowerState newState)
-            throws IOException, InterruptedException, FhemException {
-        synchronized (TELNET_LOCK) {
-            if (newState != DevicePowerState.ON && newState != DevicePowerState.OFF) {
-                throw new IllegalArgumentException("Der neue Zustand eines Geräts muss entweder ON oder OFF sein.");
-            }
-            if (Main.dry) {
-                return;
-            }
-            if (!this.checkConnection()) {
-                this.openFhemConnection();
-            }
-
-            // Setze Zustand
-            this.telnetFhem.emptyResponseBuffer();
-            String setCommand = "set " + device.getFhemSwitchName() + " " + newState.name().toLowerCase();
-            this.telnetFhem.sendCommand(setCommand);
-
-            // Check response from server. If it is empty, the command has been
-            // executed.
-            final String res = this.telnetFhem
-                    .waitForResponse(this.minimumTimeout.multipliedBy(2).getNano(), TimeUnit.NANOSECONDS);
-            if (res != null && !res.isEmpty()) {
-                throw new IOException("Konnte die Stromversorgung des Geräts " + device.getName() +
-                        " nicht setzen. Antwort des FHEM-Servers: '" + res + "'");
-            } else {
-                // Ensure that the action has been successful
-                DevicePowerState actualState = DevicePowerState.UNKNOWN;
-                for (int i = 0; i < this.checkStatusRetryCount; i++) {
-                    // Repeat checking the state for a fixed count of repetitions
-                    // before throwing an exception
-                    try {
-                        Thread.sleep(this.checkStatusDelay);
-                    } catch (final InterruptedException e1) {
-                        this.logger.warn("Interrupted while checking the power state.", e1);
-                        throw new IOException("Unterbrechung während dem prüfen des neuen Zustands.", e1);
-                    }
-
-                    // Check the state
-                    actualState = this.getState(device);
-                    if (actualState == newState) {
-                        break;
-                    }
-                    if (actualState == DevicePowerState.ON || actualState == DevicePowerState.OFF) {
-                        // Server hat den Befehl nicht empfangen. Wiederhole ihn.
-                        this.telnetFhem.sendCommand(setCommand);
-                    }
-                    // If the state is not the intended one, continue checking.
-                }
-                if (actualState != newState) {
-                    // If the state is not the intended one, throw an exception.
-                    String stateString;
-                    try {
-                        stateString = this.getRawState(device);
-                        if (stateString == null || stateString.isEmpty()) {
-                            stateString = "";
-                        } else {
-                            stateString = " Sein aktueller Zustand: " + stateString + ".";
-                        }
-                    } catch (final IOException e) {
-                        stateString = "";
-                    }
-                    this.logger
-                            .error("Could not set the power state of device " + device.getName() + "." + stateString);
-                    throw new IOException(
-                            "Konnte die Stromversorgung des Geräts " + device.getName() + " nicht setzen." +
-                                    stateString);
-                }
-            }
-        }
-    }
-
-    /**
-     * Looks up the power state of a device.
-     *
-     * @param device Der Gerät, dessen Status geholt werden soll.
-     * @return The power state of the device.
-     */
-    DevicePowerState getState(Device device) throws InterruptedException, FhemException, IOException {
-        if (Main.dry) {
-            return DevicePowerState.UNKNOWN;
-        }
-
-        synchronized (TELNET_LOCK) {
-            if (!this.checkConnection()) {
-                this.openFhemConnection();
-            }
-            this.telnetFhem.emptyResponseBuffer();
-            this.telnetFhem.sendCommand("get " + device.getFhemSwitchName() + " param state");
-            final String stateString = this.telnetFhem.waitForResponse(this.defaultTimeout, TimeUnit.MILLISECONDS);
-            switch (stateString) {
-                case "on":
-                    return DevicePowerState.ON;
-                case "off":
-                    return DevicePowerState.OFF;
-                case "set_on":
-                    return DevicePowerState.SET_ON;
-                case "set_off":
-                    return DevicePowerState.SET_OFF;
-                default:
-                    return DevicePowerState.UNKNOWN;
-            }
-        }
-    }
-
-    /**
      * Looks up the state of a device.
      *
      * @param device The device of which the state is to be looked up.
@@ -452,30 +456,4 @@ public class DevicePowerManager implements ICloseListener {
         return this.telnetFhem.waitForResponse(this.defaultTimeout, TimeUnit.MILLISECONDS);
     }
 
-    enum DevicePowerState {
-        /**
-         * The device is powered on.
-         */
-        ON,
-
-        /**
-         * The device is powered off.
-         */
-        OFF,
-
-        /**
-         * The device is to be powered on.
-         */
-        SET_ON,
-
-        /**
-         * The device is to be powered off.
-         */
-        SET_OFF,
-
-        /**
-         * Unknown state
-         */
-        UNKNOWN,
-    }
 }

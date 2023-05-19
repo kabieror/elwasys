@@ -14,6 +14,8 @@ import org.kabieror.elwasys.common.NoDataFoundException;
 import org.kabieror.elwasys.raspiclient.application.ElwaManager;
 import org.kabieror.elwasys.raspiclient.application.ICloseListener;
 import org.kabieror.elwasys.raspiclient.configuration.WashguardConfiguration;
+import org.kabieror.elwasys.raspiclient.devices.DevicePowerState;
+import org.kabieror.elwasys.raspiclient.devices.IDevicePowerManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -85,21 +87,21 @@ public class ExecutionManager implements ICloseListener {
                     synchronized (d) {
                         if (d.getCurrentExecution() == null) {
                             // Stelle sicher, dass die Stromzufuhr des Geräts aus ist.
-                            DevicePowerManager.DevicePowerState state;
+                            DevicePowerState state;
                             try {
                                 state = ElwaManager.instance.getDevicePowerManager().getState(d);
                             } catch (InterruptedException | FhemException | IOException e1) {
                                 this.logger.error(String.format("[%1s] Could not check power state.", d.getName()), e1);
                                 return;
                             }
-                            if (state == DevicePowerManager.DevicePowerState.ON) {
+                            if (state == DevicePowerState.ON) {
                                 // Schalte Gerät aus.
                                 try {
                                     this.logger.warn(String
                                             .format("[%1s] Device has been powered on but there is no execution running. " +
                                                     "Switching it" + " off now" + ".", d.getName()));
                                     ElwaManager.instance.getDevicePowerManager()
-                                            .setDevicePowerState(d, DevicePowerManager.DevicePowerState.OFF);
+                                            .setDevicePowerState(d, DevicePowerState.OFF);
                                 } catch (IOException | InterruptedException | FhemException e1) {
                                     this.logger.error(String.format("[%1s] Could not power off device.", d.getName()), e1);
                                 }
@@ -142,7 +144,7 @@ public class ExecutionManager implements ICloseListener {
             // Strom freigeben
             try {
                 ElwaManager.instance.getDevicePowerManager()
-                        .setDevicePowerState(e.getDevice(), DevicePowerManager.DevicePowerState.ON);
+                        .setDevicePowerState(e.getDevice(), DevicePowerState.ON);
             } catch (final IOException | InterruptedException | FhemException ex) {
                 this.executionFinishers.remove(e);
                 e.reset();
@@ -412,7 +414,7 @@ public class ExecutionManager implements ICloseListener {
             // Schalte den Strom der Maschine aus
             try {
                 ElwaManager.instance.getDevicePowerManager()
-                        .setDevicePowerState(this.e.getDevice(), DevicePowerManager.DevicePowerState.OFF);
+                        .setDevicePowerState(this.e.getDevice(), DevicePowerState.OFF);
             } catch (final IOException | InterruptedException | FhemException e1) {
                 this.logger.error("[" + this.e.getDevice().getName() + "] Could not power off the device.", e1);
                 throw e1;
