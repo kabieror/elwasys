@@ -379,7 +379,7 @@ public class FhemDevicePowerManager implements IDevicePowerManager, ICloseListen
                     this.logger.trace("Power Measurement received: " + event);
                     Double measurement = Double.parseDouble(powerMatcher.group(2));
                     this.powerMeasurementHandlers.forEach(l -> {
-                        l.onPowerMeasurementAvailable(execution.getDevice().getId(), measurement);
+                        l.onPowerMeasurementAvailable(execution, measurement);
                     });
                     return;
                 }

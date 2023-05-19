@@ -69,6 +69,7 @@ public class ExecutionManager implements ICloseListener {
         this.executorService = Executors.newScheduledThreadPool(4);
 
         ElwaManager.instance.listenToCloseEvent(this);
+        devicePowerManager.addPowerMeasurementListener(this::onPowerMeasurementAvailable);
 
         this.executorService.scheduleAtFixedRate(() -> {
             // Plane Sicherung vor externer Aktivierung der Stromzufuhr von Geräten
