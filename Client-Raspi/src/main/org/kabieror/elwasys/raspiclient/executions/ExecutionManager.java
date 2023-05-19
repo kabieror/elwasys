@@ -1,7 +1,5 @@
 package org.kabieror.elwasys.raspiclient.executions;
 
-import net.pushover.client.*;
-
 import org.kabieror.elwasys.common.Device;
 import org.kabieror.elwasys.common.Execution;
 import org.kabieror.elwasys.common.NoDataFoundException;
@@ -55,7 +53,7 @@ public class ExecutionManager implements ICloseListener {
      * Alle geplanten Beendigungen von Ausführungen aufgrund von geringer
      * Leistung.
      */
-    final Map<Execution, ScheduledFuture> plannedStops = new HashMap<>();
+    final Map<Execution, ScheduledFuture<?>> plannedStops = new HashMap<>();
 
     private IDevicePowerManager devicePowerManager;
 

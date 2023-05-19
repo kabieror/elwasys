@@ -42,7 +42,7 @@ class ExecutionFinisher implements Runnable {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private final Integer lock = 0;
+    private final Object lock = new Object();
 
     private final Execution e;
 

@@ -9,7 +9,6 @@ import java.net.Socket;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 /**
  * This manager detects the concurrent execution of another instance of the software
@@ -27,7 +26,6 @@ public class SingleInstanceManager extends Thread implements ICloseListener {
     private ExecutorService executorService = Executors.newFixedThreadPool(1);
     private CountDownLatch startupLatch = new CountDownLatch(1);
 
-    private Future serverFuture;
     private ServerSocket serverSocket;
 
     private SingleInstanceManager() {
@@ -42,7 +40,7 @@ public class SingleInstanceManager extends Thread implements ICloseListener {
 
         this.logger.debug("Starting prevention of concurrent program executions");
         try {
-            Socket socket = new Socket("localhost", port);
+            new Socket("localhost", port);
             this.logger.error("Another instance of the application is running on port " + port);
             throw new AlreadyRunningException();
         } catch (IOException e) {
@@ -51,8 +49,7 @@ public class SingleInstanceManager extends Thread implements ICloseListener {
 
         ElwaManager.instance.listenToCloseEvent(this);
 
-        // Start server
-        this.serverFuture = this.executorService.submit(() -> {
+        this.executorService.submit(() -> {
             try {
                 this.serverSocket = new ServerSocket(port, 1);
 

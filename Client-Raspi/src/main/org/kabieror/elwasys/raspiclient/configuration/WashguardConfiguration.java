@@ -26,8 +26,6 @@ public class WashguardConfiguration extends ConfigurationManager {
     private final File uidFile = new File(System.getProperty("user.dir") + DS + ".client-uid");
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private String uid = null;
-    private Integer singleInstancePort;
-
     /**
      * Constructor
      *

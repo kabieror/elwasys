@@ -31,7 +31,7 @@ public class DevicePowerManager implements IDevicePowerManager, ICloseListener {
     /**
      * Sperre für die gleichzeitige Ausführung von Telnet-Anfragen.
      */
-    private final static Integer TELNET_LOCK = 0;
+    private final static Object TELNET_LOCK = new Object();
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     /**
      * The pattern which indicates power events.

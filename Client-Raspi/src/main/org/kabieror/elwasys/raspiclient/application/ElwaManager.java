@@ -36,8 +36,6 @@ public class ElwaManager {
 
     private final MaintenanceServerManager maintenanceServerManager;
 
-    private SingleInstanceManager singleInstanceManager;
-
     /**
      * Listener
      */
