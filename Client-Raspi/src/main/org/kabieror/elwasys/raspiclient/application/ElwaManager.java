@@ -2,6 +2,8 @@ package org.kabieror.elwasys.raspiclient.application;
 
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+
+import org.apache.commons.lang3.StringUtils;
 import org.kabieror.elwasys.common.*;
 import org.kabieror.elwasys.raspiclient.configuration.LocationManager;
 import org.kabieror.elwasys.raspiclient.configuration.WashguardConfiguration;
@@ -135,10 +137,10 @@ public class ElwaManager {
         // Lade Ort
         this.thisLocation = this.dataManager.getLocation(this.configurationManager.getLocationName());
 
-        if (this.configurationManager.getDeconzServer() != null) {
+        if (StringUtils.isNotBlank(this.configurationManager.getDeconzServer())) {
             this.logger.info("Using Deconz as gateway.");
             this.devicePowerManager = new DeconzDevicePowerManager(this.configurationManager);
-        } else if (this.configurationManager.getFhemConnectionString() != null) {
+        } else if (StringUtils.isNotBlank(this.configurationManager.getFhemConnectionString())) {
             this.logger.info("Using fhem as gateway.");
             this.devicePowerManager = new FhemDevicePowerManager(this.configurationManager);
         } else {
