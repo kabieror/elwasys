@@ -5,7 +5,9 @@ import javafx.stage.WindowEvent;
 import org.kabieror.elwasys.common.*;
 import org.kabieror.elwasys.raspiclient.configuration.LocationManager;
 import org.kabieror.elwasys.raspiclient.configuration.WashguardConfiguration;
-import org.kabieror.elwasys.raspiclient.devices.DevicePowerManager;
+import org.kabieror.elwasys.raspiclient.devices.DeconzDevicePowerManager;
+import org.kabieror.elwasys.raspiclient.devices.FhemDevicePowerManager;
+import org.kabieror.elwasys.raspiclient.devices.IDevicePowerManager;
 import org.kabieror.elwasys.raspiclient.executions.ExecutionManager;
 import org.kabieror.elwasys.raspiclient.executions.FhemException;
 import org.kabieror.elwasys.raspiclient.io.CardReader;
@@ -61,7 +63,7 @@ public class ElwaManager {
      * Der Manager für das freigeben und abschalten des Stroms von verwalteten
      * Geräten
      */
-    private DevicePowerManager devicePowerManager;
+    private IDevicePowerManager devicePowerManager;
 
     /**
      * Der Manager für die Registrierung auf einen Ort.
@@ -133,7 +135,17 @@ public class ElwaManager {
         // Lade Ort
         this.thisLocation = this.dataManager.getLocation(this.configurationManager.getLocationName());
 
-        this.devicePowerManager = new DevicePowerManager(this.configurationManager);
+        if (this.configurationManager.getDeconzServer() != null) {
+            this.logger.info("Using Deconz as gateway.");
+            this.devicePowerManager = new DeconzDevicePowerManager(this.configurationManager);
+        } else if (this.configurationManager.getFhemConnectionString() != null) {
+            this.logger.info("Using fhem as gateway.");
+            this.devicePowerManager = new FhemDevicePowerManager(this.configurationManager);
+        } else {
+            this.logger.error("Application configuration is invalid. Could not find any device power gateway to use. " +
+                    "You must either provide a value for deconz.server or fhem.server");
+            System.exit(1);
+        }
         this.executionManager = new ExecutionManager(this.devicePowerManager);
         this.mainFormController.initiate();
 

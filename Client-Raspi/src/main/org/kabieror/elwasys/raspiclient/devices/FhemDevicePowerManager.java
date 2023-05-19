@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
  * @author Oliver Kabierschke
  */
 @SuppressWarnings("FieldCanBeLocal")
-public class DevicePowerManager implements IDevicePowerManager, ICloseListener {
+public class FhemDevicePowerManager implements IDevicePowerManager, ICloseListener {
 
     /**
      * Sperre für die gleichzeitige Ausführung von Telnet-Anfragen.
@@ -89,7 +89,7 @@ public class DevicePowerManager implements IDevicePowerManager, ICloseListener {
 
     private List<IDevicePowerMeasurementHandler> powerMeasurementHandlers = new LinkedList<>();
 
-    public DevicePowerManager(WashguardConfiguration config) throws InterruptedException, FhemException {
+    public FhemDevicePowerManager(WashguardConfiguration config) throws InterruptedException, FhemException {
         this.config = config;
         if (!Main.dry) {
             this.openFhemConnection();

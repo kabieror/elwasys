@@ -46,6 +46,28 @@ public class WashguardConfiguration extends ConfigurationManager {
     }
 
     /**
+     * The DeConz server address.
+     * If this value is not specified, then a fhem connection will be opened.
+     */
+    public String getDeconzServer() {
+        return this.props.getProperty("deconz.server");
+    }
+
+    /**
+     * The username to use for authentication at DeConz
+     */
+    public String getDeconzUser() {
+        return this.props.getProperty("deconz.user");
+    }
+
+    /**
+     * The password to use for authentication at DeConz
+     */
+    public String getDeconzPassword() {
+        return this.props.getProperty("deconz.password");
+    }
+
+    /**
      * Gibt die Adresse, unter welcher der zu verwendende FHEM-Server erreichbar
      * ist.
      *
