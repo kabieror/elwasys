@@ -24,4 +24,5 @@ public interface IDevicePowerManager {
      */
     DevicePowerState getState(Device device) throws InterruptedException, FhemException, IOException;
 
+    void addPowerMeasurementListener(IDevicePowerMeasurementHandler handler);
 }

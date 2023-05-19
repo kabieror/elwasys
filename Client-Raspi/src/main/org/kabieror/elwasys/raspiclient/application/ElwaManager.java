@@ -5,7 +5,7 @@ import javafx.stage.WindowEvent;
 import org.kabieror.elwasys.common.*;
 import org.kabieror.elwasys.raspiclient.configuration.LocationManager;
 import org.kabieror.elwasys.raspiclient.configuration.WashguardConfiguration;
-import org.kabieror.elwasys.raspiclient.executions.DevicePowerManager;
+import org.kabieror.elwasys.raspiclient.devices.DevicePowerManager;
 import org.kabieror.elwasys.raspiclient.executions.ExecutionManager;
 import org.kabieror.elwasys.raspiclient.executions.FhemException;
 import org.kabieror.elwasys.raspiclient.io.CardReader;
@@ -136,7 +136,7 @@ public class ElwaManager {
         this.thisLocation = this.dataManager.getLocation(this.configurationManager.getLocationName());
 
         this.devicePowerManager = new DevicePowerManager(this.configurationManager);
-        this.executionManager = new ExecutionManager();
+        this.executionManager = new ExecutionManager(this.devicePowerManager);
         this.mainFormController.initiate();
 
         // Setze unterbrochene Ausführungen fort
@@ -201,15 +201,6 @@ public class ElwaManager {
      */
     public ExecutionManager getExecutionManager() {
         return this.executionManager;
-    }
-
-    /**
-     * Gibt den Manager für das Schalten von Geräten zurück.
-     *
-     * @return Den Manager für das Schalten von Geräten.
-     */
-    public DevicePowerManager getDevicePowerManager() {
-        return this.devicePowerManager;
     }
 
     /**

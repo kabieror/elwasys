@@ -1,4 +1,4 @@
-package org.kabieror.elwasys.raspiclient.executions;
+package org.kabieror.elwasys.raspiclient.devices;
 
 import org.kabieror.elwasys.common.Device;
 import org.kabieror.elwasys.common.Execution;
@@ -6,8 +6,7 @@ import org.kabieror.elwasys.raspiclient.application.ElwaManager;
 import org.kabieror.elwasys.raspiclient.application.ICloseListener;
 import org.kabieror.elwasys.raspiclient.application.Main;
 import org.kabieror.elwasys.raspiclient.configuration.WashguardConfiguration;
-import org.kabieror.elwasys.raspiclient.devices.DevicePowerState;
-import org.kabieror.elwasys.raspiclient.devices.IDevicePowerManager;
+import org.kabieror.elwasys.raspiclient.executions.FhemException;
 import org.kabieror.elwasys.raspiclient.io.TelnetClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +14,8 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -86,6 +87,8 @@ public class DevicePowerManager implements IDevicePowerManager, ICloseListener {
      */
     private Duration minimumTimeout = Duration.ZERO;
 
+    private List<IDevicePowerMeasurementHandler> powerMeasurementHandlers = new LinkedList<>();
+
     public DevicePowerManager(WashguardConfiguration config) throws InterruptedException, FhemException {
         this.config = config;
         if (!Main.dry) {
@@ -97,6 +100,11 @@ public class DevicePowerManager implements IDevicePowerManager, ICloseListener {
                     .warn("Starting in dry mode without setting power of physical devices. Remove the '-dry' argument" +
                             " to go to production mode.");
         }
+    }
+
+    @Override
+    public void addPowerMeasurementListener(IDevicePowerMeasurementHandler handler) {
+        this.powerMeasurementHandlers.add(handler);
     }
 
     /**
@@ -363,16 +371,21 @@ public class DevicePowerManager implements IDevicePowerManager, ICloseListener {
      * @param event Das Ereignis.
      */
     private void onEventReceived(String event) {
-        this.logger.trace("Event received: " + event);
         final Matcher powerMatcher = this.eventsPowerPattern.matcher(event);
 
         if (powerMatcher.find()) {
             for (final Execution execution : ElwaManager.instance.getExecutionManager().getRunningExecutions()) {
                 if (powerMatcher.group(1).equals(execution.getDevice().getFhemPowerName())) {
-                    ElwaManager.instance.getExecutionManager()
-                            .onPowerMeasurementAvailable(execution, Double.parseDouble(powerMatcher.group(2)));
+                    this.logger.trace("Power Measurement received: " + event);
+                    Double measurement = Double.parseDouble(powerMatcher.group(2));
+                    this.powerMeasurementHandlers.forEach(l -> {
+                        l.onPowerMeasurementAvailable(execution.getDevice().getId(), measurement);
+                    });
+                    return;
                 }
             }
+        } else {
+            this.logger.info("Could not parse power measurement event: " + event);
         }
     }
 
