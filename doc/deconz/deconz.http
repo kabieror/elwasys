@@ -1,6 +1,7 @@
 
+@url = http://192.168.0.15:8900
 # @name login
-POST http://localhost:5480/api
+POST {{url}}/api
 Authorization: Basic delight:elwasys2014
 
 {
@@ -10,4 +11,12 @@ Authorization: Basic delight:elwasys2014
 ###
 @token = {{login.response.body.0.success.username}}
 #
-GET http://localhost:5480/api/{{token}}/config
+GET {{url}}/api/{{token}}/config
+
+###
+
+GET {{url}}/api/{{token}}/lights/1
+
+###
+
+GET {{url}}/api/{{token}}/sensors
