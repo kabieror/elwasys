@@ -1,8 +1,8 @@
-package org.kabieror.elwasys.raspiclient.devices;
+package org.kabieror.elwasys.raspiclient.devices.deconz;
 
 import java.util.Objects;
 
-public final class DeconzPowerMeasurementState {
+final class DeconzPowerMeasurementState {
     private Double current;
     private Double power;
     private Double voltage;

@@ -1,8 +1,8 @@
-package org.kabieror.elwasys.raspiclient.devices;
+package org.kabieror.elwasys.raspiclient.devices.deconz;
 
 import java.util.Objects;
 
-public final class DeconzPowerMeasurementEvent {
+final class DeconzPowerMeasurementEvent {
     private DeconzChangeType e;
     private int id;
     private String r;

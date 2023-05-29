@@ -1,4 +1,4 @@
-package org.kabieror.elwasys.raspiclient.devices;
+package org.kabieror.elwasys.raspiclient.devices.deconz;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -20,7 +20,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class DeconzEventListener extends TextWebSocketHandler {
+class DeconzEventListener extends TextWebSocketHandler {
     private static final Integer INITIAL_RECONNECT_DELAY_SECONDS = 5;
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final List<IDeconzPowerMeasurementEventListener> powerMeasurementEventListeners = new ArrayList<>();

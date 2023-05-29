@@ -7,7 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.kabieror.elwasys.common.*;
 import org.kabieror.elwasys.raspiclient.configuration.LocationManager;
 import org.kabieror.elwasys.raspiclient.configuration.WashguardConfiguration;
-import org.kabieror.elwasys.raspiclient.devices.DeconzDevicePowerManager;
+import org.kabieror.elwasys.raspiclient.devices.deconz.DeconzDevicePowerManager;
 import org.kabieror.elwasys.raspiclient.devices.FhemDevicePowerManager;
 import org.kabieror.elwasys.raspiclient.devices.IDevicePowerManager;
 import org.kabieror.elwasys.raspiclient.executions.ExecutionManager;

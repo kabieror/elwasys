@@ -1,8 +1,11 @@
-package org.kabieror.elwasys.raspiclient.devices;
+package org.kabieror.elwasys.raspiclient.devices.deconz;
 
 import org.kabieror.elwasys.common.Device;
 import org.kabieror.elwasys.raspiclient.application.ElwaManager;
 import org.kabieror.elwasys.raspiclient.configuration.WashguardConfiguration;
+import org.kabieror.elwasys.raspiclient.devices.DevicePowerState;
+import org.kabieror.elwasys.raspiclient.devices.IDevicePowerManager;
+import org.kabieror.elwasys.raspiclient.devices.IDevicePowerMeasurementHandler;
 import org.kabieror.elwasys.raspiclient.executions.FhemException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,8 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DeconzDevicePowerManager implements IDevicePowerManager {
-
-
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private final DeconzEventListener eventListener;
