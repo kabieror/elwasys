@@ -74,7 +74,7 @@ class DeconzEventListener extends TextWebSocketHandler {
         byte[] rawBytes = message.getPayload().getBytes(StandardCharsets.UTF_8);
         try {
             DeconzPowerMeasurementEvent event = gson.fromJson(new String(rawBytes), DeconzPowerMeasurementEvent.class);
-            if (event.state() != null) {
+            if (event.r().equals("sensors") && event.state() != null && event.state().power() != null) {
                 this.powerMeasurementEventListeners.forEach(l -> l.onPowerMeasurementReceived(event));
             }
         } catch (JsonSyntaxException e) {
