@@ -30,6 +30,8 @@ class DeconzEventListener extends TextWebSocketHandler {
     private final WebSocketClient client = new StandardWebSocketClient();
     private WebSocketSession webSocketSession;
 
+    private final Gson gson = new Gson();
+
     public void listenToPowerMeasurementReceived(IDeconzPowerMeasurementEventListener listener) {
         this.powerMeasurementEventListeners.add(listener);
     }
@@ -70,11 +72,11 @@ class DeconzEventListener extends TextWebSocketHandler {
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) {
         byte[] rawBytes = message.getPayload().getBytes(StandardCharsets.UTF_8);
-        this.logger.info("Received: " + new String(rawBytes));
-        Gson gson = new Gson();
         try {
             DeconzPowerMeasurementEvent event = gson.fromJson(new String(rawBytes), DeconzPowerMeasurementEvent.class);
-            this.powerMeasurementEventListeners.forEach(l -> l.onPowerMeasurementReceived(event));
+            if (event.state() != null) {
+                this.powerMeasurementEventListeners.forEach(l -> l.onPowerMeasurementReceived(event));
+            }
         } catch (JsonSyntaxException e) {
             this.logger.error("Failed to read event data.", e);
         } catch (Exception e) {
