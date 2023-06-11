@@ -11,14 +11,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DeconzDevicePowerManager implements IDevicePowerManager {
     private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final DeconzApiAdapter apiAdapter;
 
     private final DeconzEventListener eventListener;
-    private List<IDevicePowerMeasurementHandler> powerMeasurementListeners = new ArrayList<>();
+    private final List<IDevicePowerMeasurementHandler> powerMeasurementListeners = new ArrayList<>();
 
     public DeconzDevicePowerManager(WashguardConfiguration configurationManager) {
         eventListener = new DeconzEventListener();
@@ -26,6 +28,8 @@ public class DeconzDevicePowerManager implements IDevicePowerManager {
         eventListener.start();
 
         ElwaManager.instance.listenToCloseEvent(restart -> onClosing());
+
+        apiAdapter = new DeconzApiAdapter(URI.create(configurationManager.getDeconzServer()));
     }
 
     private void onPowerMeasurementReceived(DeconzPowerMeasurementEvent e) {
@@ -43,15 +47,16 @@ public class DeconzDevicePowerManager implements IDevicePowerManager {
         eventListener.stop();
     }
 
-
     @Override
     public void setDevicePowerState(Device device, DevicePowerState newState)
             throws IOException, InterruptedException, FhemException {
+        apiAdapter.setDeviceState(device.getDeconzId(), newState == DevicePowerState.SET_ON);
     }
 
     @Override
     public DevicePowerState getState(Device device) throws InterruptedException, FhemException, IOException {
-        return DevicePowerState.OFF;
+        var isOn = apiAdapter.getDeviceState(device.getDeconzId()).on();
+        return isOn ? DevicePowerState.ON : DevicePowerState.OFF;
     }
 
     @Override
