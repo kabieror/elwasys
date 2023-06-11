@@ -30,7 +30,13 @@ public class DeconzDevicePowerManager implements IDevicePowerManager {
 
     private void onPowerMeasurementReceived(DeconzPowerMeasurementEvent e) {
         this.logger.info("Received: " + e.toString());
-//        this.powerMeasurementListeners.forEach(l -> l.onPowerMeasurementAvailable(execution, consumption));
+        var execution = ElwaManager.instance.getExecutionManager()
+                .getRunningExecutions().stream()
+                .filter(exe -> exe.getDevice().getDeconzId() == e.id())
+                .findFirst();
+        execution.ifPresent(value ->
+                this.powerMeasurementListeners.forEach(l -> l.onPowerMeasurementAvailable(value, e.state().power()))
+        );
     }
 
     private void onClosing() {
