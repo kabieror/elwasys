@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.time.Duration;
+import java.util.regex.Pattern;
 
 /**
  * Diese Klasse verwaltet die Konfiguration
@@ -50,7 +51,11 @@ public class WashguardConfiguration extends ConfigurationManager {
      * If this value is not specified, then a fhem connection will be opened.
      */
     public String getDeconzServer() {
-        return this.props.getProperty("deconz.server");
+        var server = this.props.getProperty("deconz.server").trim();
+        if (!Pattern.matches("^https?://.*", server)) {
+            server = "http://" + server;
+        }
+        return server;
     }
 
     /**

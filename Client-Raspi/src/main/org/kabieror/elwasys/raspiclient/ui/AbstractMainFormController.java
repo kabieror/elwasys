@@ -116,7 +116,7 @@ public abstract class AbstractMainFormController implements Initializable, IExec
         } catch (FhemException e) {
             this.logger.error("Initialization error.", e);
             Platform.runLater(() -> this.displayError("Start fehlgeschlagen",
-                    "Kommunikationsfehler: " + e.getLocalizedMessage() +
+                    "Kommunikationsfehler: " + exceptionToString(e) +
                             (e.getCause() != null ? "\n" + e.getCause().getLocalizedMessage() : ""), actionContainer,
                     false));
         } catch (NoDataFoundException e) {
@@ -130,5 +130,13 @@ public abstract class AbstractMainFormController implements Initializable, IExec
                     actionContainer, false));
         }
         return false;
+    }
+
+    private static String exceptionToString(FhemException e) {
+        if (e.getLocalizedMessage() != null) {
+            return e.getLocalizedMessage();
+        } else {
+            return e.getClass().getName();
+        }
     }
 }

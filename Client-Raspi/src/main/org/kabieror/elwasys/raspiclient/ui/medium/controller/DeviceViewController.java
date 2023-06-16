@@ -237,21 +237,21 @@ public class DeviceViewController implements Initializable, IViewController, Bac
                     this.logger.error("Could not switch on device.", e);
                     this.mainFormController.displayError("Datenbankfehler",
                             "Das Gerät konnte aufgrund eines Datenbankfehlers nicht geschaltet werden.\n" +
-                                    e.getLocalizedMessage(), ac, true);
+                                    exceptionToString(e), ac, true);
                 } catch (IOException e) {
                     this.logger.error("Could not switch on device.", e);
                     this.mainFormController.displayError("Kommunikationsfehler",
                             "Das Gerät konnte aufgrund eines Kommunikationsfehlers nicht geschaltet werden.\n" +
-                                    e.getLocalizedMessage(), ac, true);
+                                    exceptionToString(e), ac, true);
                 } catch (InterruptedException e) {
                     this.logger.error("Could not switch on device.", e);
                     this.mainFormController.displayError("Unterbrechung",
                             "Das Gerät konnte aufgrund einer Unterbrechung nicht geschaltet werden.\n" +
-                                    e.getLocalizedMessage(), ac, true);
+                                    exceptionToString(e), ac, true);
                 } catch (FhemException e) {
                     this.logger.error("Could not switch on device.", e);
                     this.mainFormController.displayError("Kommunikationsfehler",
-                            "Das Gerät ist nicht erreichbar.\n" + e.getLocalizedMessage(), ac, true);
+                            "Das Gerät ist nicht erreichbar.\n" + exceptionToString(e), ac, true);
                 } finally {
                     this.mainFormController.endWait();
                 }
@@ -270,5 +270,13 @@ public class DeviceViewController implements Initializable, IViewController, Bac
      */
     void onDeviceSelected(Device device) {
         this.mainFormController.onDeviceSelected(device);
+    }
+
+    private static String exceptionToString(Exception e) {
+        if (e.getLocalizedMessage() != null) {
+            return e.getLocalizedMessage();
+        } else {
+            return e.getClass().getName();
+        }
     }
 }

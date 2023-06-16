@@ -29,7 +29,10 @@ public class DeconzDevicePowerManager implements IDevicePowerManager {
 
         ElwaManager.instance.listenToCloseEvent(restart -> onClosing());
 
-        apiAdapter = new DeconzApiAdapter(URI.create(configurationManager.getDeconzServer()));
+        apiAdapter = new DeconzApiAdapter(
+                URI.create(configurationManager.getDeconzServer()),
+                configurationManager.getDeconzUser(),
+                configurationManager.getDeconzPassword());
     }
 
     private void onPowerMeasurementReceived(DeconzPowerMeasurementEvent e) {

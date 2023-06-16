@@ -135,7 +135,7 @@ public class ExecutionManager implements ICloseListener {
             // Strom freigeben
             try {
                 this.devicePowerManager.setDevicePowerState(e.getDevice(), DevicePowerState.ON);
-            } catch (final IOException | InterruptedException | FhemException ex) {
+            } catch (final Exception ex) {
                 this.executionFinishers.remove(e);
                 e.reset();
                 throw ex;
