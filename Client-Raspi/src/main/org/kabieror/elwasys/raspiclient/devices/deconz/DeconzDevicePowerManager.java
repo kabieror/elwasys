@@ -53,7 +53,8 @@ public class DeconzDevicePowerManager implements IDevicePowerManager {
     @Override
     public void setDevicePowerState(Device device, DevicePowerState newState)
             throws IOException, InterruptedException, FhemException {
-        apiAdapter.setDeviceState(device.getDeconzId(), newState == DevicePowerState.SET_ON);
+        apiAdapter.setDeviceState(device.getDeconzId(),
+                newState == DevicePowerState.SET_ON || newState == DevicePowerState.ON);
     }
 
     @Override
