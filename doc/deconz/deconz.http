@@ -15,7 +15,7 @@ GET {{url}}/api/{{token}}/config
 
 ###
 
-GET {{url}}/api/{{token}}/lights/1
+GET {{url}}/api/{{token}}/lights/3
 
 ###
 
