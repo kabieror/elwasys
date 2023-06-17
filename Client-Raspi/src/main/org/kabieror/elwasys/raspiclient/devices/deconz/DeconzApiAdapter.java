@@ -6,20 +6,22 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.net.http.HttpRequest.Builder;
 import java.util.Base64;
 import java.util.function.Consumer;
 
+import org.kabieror.elwasys.raspiclient.devices.deconz.model.DeconzAuthenticationSuccessEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSyntaxException;
 
 class DeconzApiAdapter {
     private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final Gson gson = new Gson();
     private String token;
 
     private final HttpClient httpClient = HttpClient.newHttpClient();
@@ -52,12 +54,10 @@ class DeconzApiAdapter {
                 var response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
                 if (response.statusCode() == HttpStatus.OK.value()) {
                     return response;
-                }
-                else if (response.statusCode() == HttpStatus.UNAUTHORIZED.value()) {
+                } else if (response.statusCode() == HttpStatus.UNAUTHORIZED.value()) {
                     logger.warn("Got http status %s from deCONZ. Trying to re-authenticate.".formatted(response.statusCode()));
                     authenticate();
-                }
-                else {
+                } else {
                     logger.error("Got error response with status %s from deCONZ.\n%s".formatted(response.statusCode(), response.body()));
                     throw new DeconzException();
                 }
@@ -66,6 +66,17 @@ class DeconzApiAdapter {
             }
         }
         throw new DeconzException("Fehler bei der Kommunikation mit deCONZ.");
+    }
+
+    public <T> T parseResponse(HttpResponse<String> response, Class<T> responseType) throws DeconzException {
+        String responseBody = response.body();
+        Gson gson = new Gson();
+        try {
+            return gson.fromJson(responseBody, responseType);
+        } catch (JsonSyntaxException e) {
+            logger.error("Failed to parse JSON response from deCONZ.", e);
+            throw new DeconzException("Failed to parse JSON response.");
+        }
     }
 
     private void authenticate() throws IOException, InterruptedException {

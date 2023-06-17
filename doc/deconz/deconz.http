@@ -15,8 +15,11 @@ GET {{url}}/api/{{token}}/config
 
 ###
 
-GET {{url}}/api/{{token}}/lights/3
+GET {{url}}/api/{{token}}/lights
 
 ###
 
 GET {{url}}/api/{{token}}/sensors
+
+# a4:c1:38:ae:c6:5e:e1:02-01
+# a4:c1:38:ae:c6:5e:e1:02-01

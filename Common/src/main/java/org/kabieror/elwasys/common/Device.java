@@ -364,7 +364,7 @@ public class Device {
         this.fhemName = res.getString("fhem_name");
         this.fhemSwitchName = res.getString("fhem_switch_name");
         this.fhemPowerName = res.getString("fhem_power_name");
-        this.deconzUuid = res.getString("deconz_id");
+        this.deconzUuid = res.getString("deconz_uuid");
         this.autoEndPowerThreashold = res.getFloat("auto_end_power_threashold");
         this.autoEndWaitTime = Duration.ofSeconds(res.getInt("auto_end_wait_time"));
         this.enabled = res.getBoolean("enabled");

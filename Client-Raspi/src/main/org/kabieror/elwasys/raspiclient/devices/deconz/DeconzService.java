@@ -2,11 +2,14 @@ package org.kabieror.elwasys.raspiclient.devices.deconz;
 
 import com.google.gson.Gson;
 
+import org.kabieror.elwasys.raspiclient.devices.deconz.model.DeconzDevice;
+import org.kabieror.elwasys.raspiclient.devices.deconz.model.DeconzDeviceState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.http.HttpRequest;
+import java.util.Map;
 
 class DeconzService {
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -22,7 +25,7 @@ class DeconzService {
     public DeconzDeviceState getDeviceState(String deconzUuid) throws IOException, InterruptedException {
         var response = adapter.request("lights/%s".formatted(deconzUuid),
                 r -> r.GET());
-        var device = gson.fromJson(response.body(), DeconzDevice.class);
+        var device = adapter.parseResponse(response, DeconzDevice.class);
         return device.state();
     }
 
