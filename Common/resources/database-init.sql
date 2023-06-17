@@ -141,7 +141,7 @@ CREATE TABLE devices
   fhem_name                 VARCHAR(50)                  NOT NULL DEFAULT '',
   fhem_switch_name          VARCHAR(50)                  NOT NULL DEFAULT '',
   fhem_power_name           VARCHAR(50)                  NOT NULL DEFAULT '',
-  deconz_id                 INT,
+  deconz_uuid               VARCHAR(50)                  DEFAULT '',
   auto_end_power_threashold REAL                         NOT NULL DEFAULT 0.5,
   auto_end_wait_time        INT                          NOT NULL DEFAULT 20,
   enabled                   BOOLEAN                      NOT NULL DEFAULT TRUE

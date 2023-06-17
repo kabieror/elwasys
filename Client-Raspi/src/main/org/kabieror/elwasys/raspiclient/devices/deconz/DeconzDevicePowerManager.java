@@ -18,6 +18,7 @@ import java.util.List;
 public class DeconzDevicePowerManager implements IDevicePowerManager {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final DeconzApiAdapter apiAdapter;
+    private final DeconzService deconzService;
 
     private final DeconzEventListener eventListener;
     private final List<IDevicePowerMeasurementHandler> powerMeasurementListeners = new ArrayList<>();
@@ -33,13 +34,15 @@ public class DeconzDevicePowerManager implements IDevicePowerManager {
                 URI.create(configurationManager.getDeconzServer()),
                 configurationManager.getDeconzUser(),
                 configurationManager.getDeconzPassword());
+        deconzService = new DeconzService(apiAdapter);
     }
 
     private void onPowerMeasurementReceived(DeconzPowerMeasurementEvent e) {
         this.logger.info("Received: " + e.toString());
+
         var execution = ElwaManager.instance.getExecutionManager()
                 .getRunningExecutions().stream()
-                .filter(exe -> exe.getDevice().getDeconzId() == e.id())
+                .filter(exe -> e.uniqueid().startsWith(exe.getDevice().getDeconzUuid()))
                 .findFirst();
         execution.ifPresent(value ->
                 this.powerMeasurementListeners.forEach(l -> l.onPowerMeasurementAvailable(value, e.state().power()))
@@ -53,13 +56,13 @@ public class DeconzDevicePowerManager implements IDevicePowerManager {
     @Override
     public void setDevicePowerState(Device device, DevicePowerState newState)
             throws IOException, InterruptedException, FhemException {
-        apiAdapter.setDeviceState(device.getDeconzId(),
+        deconzService.setDeviceState(device.getDeconzUuid(),
                 newState == DevicePowerState.SET_ON || newState == DevicePowerState.ON);
     }
 
     @Override
     public DevicePowerState getState(Device device) throws InterruptedException, FhemException, IOException {
-        var isOn = apiAdapter.getDeviceState(device.getDeconzId()).on();
+        var isOn = deconzService.getDeviceState(device.getDeconzUuid()).on();
         return isOn ? DevicePowerState.ON : DevicePowerState.OFF;
     }
 

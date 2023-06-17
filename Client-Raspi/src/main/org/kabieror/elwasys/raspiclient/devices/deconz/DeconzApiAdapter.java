@@ -1,53 +1,40 @@
 package org.kabieror.elwasys.raspiclient.devices.deconz;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSyntaxException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-
 import java.io.IOException;
-import java.io.StringReader;
 import java.net.ConnectException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.net.http.HttpRequest.Builder;
 import java.util.Base64;
 import java.util.function.Consumer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSyntaxException;
+
 class DeconzApiAdapter {
     private final Logger logger = LoggerFactory.getLogger(getClass());
+    private String token;
 
-    private final Gson gson = new Gson().newBuilder().create();
     private final HttpClient httpClient = HttpClient.newHttpClient();
     private final URI apiBase;
     private final String username;
     private final String password;
-    private String token;
 
+    // constructor
     public DeconzApiAdapter(URI apiBase, String username, String password) {
         this.apiBase = apiBase.resolve("api/");
         this.username = username;
         this.password = password;
     }
 
-    public DeconzDeviceState getDeviceState(int deconzId) throws IOException, InterruptedException {
-        var response = request("lights/%s".formatted(deconzId),
-                r -> r.GET());
-        var device = gson.fromJson(response.body(), DeconzDevice.class);
-        return device.state();
-    }
-
-    public void setDeviceState(int deviceId, boolean newState) throws IOException, InterruptedException {
-        var state = new DeconzDeviceState(newState);
-        request("lights/%s/state".formatted(deviceId),
-                r -> r.PUT(HttpRequest.BodyPublishers.ofString(gson.toJson(state))));
-    }
-
-    private HttpResponse<String> request(String apiPath, Consumer<HttpRequest.Builder> requestConfigureAction) throws IOException, InterruptedException {
+    public HttpResponse<String> request(String apiPath, Consumer<HttpRequest.Builder> requestConfigureAction) throws IOException, InterruptedException {
         if (token == null) {
             authenticate();
         }
@@ -124,4 +111,3 @@ class DeconzApiAdapter {
     }
 
 }
-
