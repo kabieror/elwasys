@@ -2,6 +2,7 @@ package org.kabieror.elwasys.raspiclient.devices.deconz;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import org.kabieror.elwasys.raspiclient.devices.deconz.model.DeconzEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.socket.CloseStatus;
@@ -24,6 +25,7 @@ class DeconzEventListener extends TextWebSocketHandler {
     private static final Integer INITIAL_RECONNECT_DELAY_SECONDS = 5;
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final List<IDeconzPowerMeasurementEventListener> powerMeasurementEventListeners = new ArrayList<>();
+    private final List<IDeconzDeviceStateEventListener> deviceStateEventListeners = new ArrayList<>();
     private Integer reconnectDelaySeconds = INITIAL_RECONNECT_DELAY_SECONDS;
     private final AtomicBoolean isReconnectRunning = new AtomicBoolean(false);
     private final ScheduledExecutorService reconnectScheduler = Executors.newSingleThreadScheduledExecutor();
@@ -34,6 +36,10 @@ class DeconzEventListener extends TextWebSocketHandler {
 
     public void listenToPowerMeasurementReceived(IDeconzPowerMeasurementEventListener listener) {
         this.powerMeasurementEventListeners.add(listener);
+    }
+
+    public void listenToDeviceStateEvent(IDeconzDeviceStateEventListener listener) {
+        this.deviceStateEventListeners.add(listener);
     }
 
     public void start() {
@@ -73,9 +79,13 @@ class DeconzEventListener extends TextWebSocketHandler {
     protected void handleTextMessage(WebSocketSession session, TextMessage message) {
         byte[] rawBytes = message.getPayload().getBytes(StandardCharsets.UTF_8);
         try {
-            DeconzPowerMeasurementEvent event = gson.fromJson(new String(rawBytes), DeconzPowerMeasurementEvent.class);
+            DeconzEvent event = gson.fromJson(new String(rawBytes), DeconzEvent.class);
             if (event.r().equals("sensors") && event.state() != null && event.state().power() != null) {
-                this.powerMeasurementEventListeners.forEach(l -> l.onPowerMeasurementReceived(event));
+                this.powerMeasurementEventListeners.forEach(
+                        l -> l.onPowerMeasurementReceived(event));
+            } else if (event.r().equals("lights") && event.state() != null && event.state().on() != null) {
+                this.deviceStateEventListeners.forEach(
+                        l -> l.onDeviceStateChanged(event.uniqueid(), event.state().on()));
             }
         } catch (JsonSyntaxException e) {
             this.logger.error("Failed to read event data.", e);

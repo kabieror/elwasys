@@ -6,6 +6,7 @@ import org.kabieror.elwasys.raspiclient.configuration.WashguardConfiguration;
 import org.kabieror.elwasys.raspiclient.devices.DevicePowerState;
 import org.kabieror.elwasys.raspiclient.devices.IDevicePowerManager;
 import org.kabieror.elwasys.raspiclient.devices.IDevicePowerMeasurementHandler;
+import org.kabieror.elwasys.raspiclient.devices.deconz.model.DeconzEvent;
 import org.kabieror.elwasys.raspiclient.executions.FhemException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,10 +35,10 @@ public class DeconzDevicePowerManager implements IDevicePowerManager {
                 URI.create(configurationManager.getDeconzServer()),
                 configurationManager.getDeconzUser(),
                 configurationManager.getDeconzPassword());
-        deconzService = new DeconzService(apiAdapter);
+        deconzService = new DeconzService(apiAdapter, eventListener);
     }
 
-    private void onPowerMeasurementReceived(DeconzPowerMeasurementEvent e) {
+    private void onPowerMeasurementReceived(DeconzEvent e) {
         this.logger.info("Received: " + e.toString());
 
         var execution = ElwaManager.instance.getExecutionManager()
