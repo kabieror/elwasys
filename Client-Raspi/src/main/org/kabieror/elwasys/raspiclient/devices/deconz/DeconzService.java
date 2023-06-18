@@ -1,7 +1,6 @@
 package org.kabieror.elwasys.raspiclient.devices.deconz;
 
 import com.google.gson.Gson;
-
 import org.kabieror.elwasys.raspiclient.devices.deconz.model.DeconzDevice;
 import org.kabieror.elwasys.raspiclient.devices.deconz.model.DeconzDeviceState;
 import org.kabieror.elwasys.raspiclient.util.BlockingMap;
@@ -10,7 +9,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.http.HttpRequest;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 class DeconzService {
@@ -27,7 +25,7 @@ class DeconzService {
         this.adapter = adapter;
         this.eventListener = eventListener;
         this.eventListener.listenToDeviceStateEvent((uuid, state) -> {
-            logger.info("Received update: " + uuid + ": " + state);
+            logger.info("Received update for " + uuid + ": " + state);
             deviceStateAwaitingMap.put(uuid, state);
         });
     }
@@ -40,6 +38,14 @@ class DeconzService {
     }
 
     public void setDeviceState(String deviceUuid, boolean newState) throws IOException, InterruptedException {
+        var currentState = getDeviceState(deviceUuid);
+        if (!currentState.reachable()) {
+            throw new DeconzException("Das Gerät ist nicht erreichbar.");
+        }
+        if (currentState.on() == newState) {
+            logger.info("Device %s already has the desired state.".formatted(deviceUuid));
+            return;
+        }
         // Reset device state before starting HTTP request to be sure not to miss the event.
         deviceStateAwaitingMap.clear(deviceUuid);
 
