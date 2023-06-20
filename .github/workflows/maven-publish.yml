@@ -54,6 +54,6 @@ jobs:
         repo_token: ${{ github.token }}
         file: Client-Raspi/target/raspi-client-${{ github.event.release.tag_name }}-jar-with-dependencies.jar
         asset_name: raspi-client-${{ github.event.release.tag_name }}.jar
-        tag: ${{ github.ref }}
+        tag: ${{ github.event.release.tag_name }}
         overwrite: true
-        body: "elwaSys client for Raspberry Pi"
+        body: "Raspberry Pi Java Client"
