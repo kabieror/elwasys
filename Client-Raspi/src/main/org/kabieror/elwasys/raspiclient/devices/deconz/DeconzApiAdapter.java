@@ -29,7 +29,6 @@ class DeconzApiAdapter {
     private final String username;
     private final String password;
 
-    // constructor
     public DeconzApiAdapter(URI apiBase, String username, String password) {
         this.apiBase = apiBase.resolve("api/");
         this.username = username;
