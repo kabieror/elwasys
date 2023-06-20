@@ -6,6 +6,7 @@ import org.kabieror.elwasys.raspiclient.configuration.WashguardConfiguration;
 import org.kabieror.elwasys.raspiclient.devices.DevicePowerState;
 import org.kabieror.elwasys.raspiclient.devices.IDevicePowerManager;
 import org.kabieror.elwasys.raspiclient.devices.IDevicePowerMeasurementHandler;
+import org.kabieror.elwasys.raspiclient.devices.deconz.model.DeconzConfig;
 import org.kabieror.elwasys.raspiclient.devices.deconz.model.DeconzEvent;
 import org.kabieror.elwasys.raspiclient.executions.FhemException;
 import org.slf4j.Logger;
@@ -24,17 +25,23 @@ public class DeconzDevicePowerManager implements IDevicePowerManager {
     private final DeconzEventListener eventListener;
     private final List<IDevicePowerMeasurementHandler> powerMeasurementListeners = new ArrayList<>();
 
-    public DeconzDevicePowerManager(WashguardConfiguration configurationManager) {
-        eventListener = new DeconzEventListener();
+    public DeconzDevicePowerManager(WashguardConfiguration configurationManager) throws IOException, InterruptedException {
+        ElwaManager.instance.listenToCloseEvent(restart -> onClosing());
+
+        var deconzUri = URI.create(configurationManager.getDeconzServer());
+        apiAdapter = new DeconzApiAdapter(
+                deconzUri,
+                configurationManager.getDeconzUser(),
+                configurationManager.getDeconzPassword());
+
+        var deconzConfig = apiAdapter.parseResponse(
+                apiAdapter.request("config", r -> r.GET()),
+                DeconzConfig.class);
+
+        eventListener = new DeconzEventListener(deconzUri.getHost(), deconzConfig.websocketport());
         eventListener.listenToPowerMeasurementReceived(this::onPowerMeasurementReceived);
         eventListener.start();
 
-        ElwaManager.instance.listenToCloseEvent(restart -> onClosing());
-
-        apiAdapter = new DeconzApiAdapter(
-                URI.create(configurationManager.getDeconzServer()),
-                configurationManager.getDeconzUser(),
-                configurationManager.getDeconzPassword());
         deconzService = new DeconzService(apiAdapter, eventListener);
     }
 

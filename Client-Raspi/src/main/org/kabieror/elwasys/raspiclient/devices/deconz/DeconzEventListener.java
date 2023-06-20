@@ -33,6 +33,13 @@ class DeconzEventListener extends TextWebSocketHandler {
     private WebSocketSession webSocketSession;
 
     private final Gson gson = new Gson();
+    private String host;
+    private int port;
+
+    public DeconzEventListener(String host, int port) {
+        this.host = host;
+        this.port = port;
+    }
 
     public void listenToPowerMeasurementReceived(IDeconzPowerMeasurementEventListener listener) {
         this.powerMeasurementEventListeners.add(listener);
@@ -107,7 +114,7 @@ class DeconzEventListener extends TextWebSocketHandler {
 
     private void openConnection() {
         logger.info("Starting web socket connection to deCONZ");
-        client.execute(this, "ws://192.168.0.15:8943")
+        client.execute(this, String.format("ws://%s:%s", host, port))
                 .whenComplete((result, ex) -> {
                     isReconnectRunning.set(false);
                     if (result != null) {
