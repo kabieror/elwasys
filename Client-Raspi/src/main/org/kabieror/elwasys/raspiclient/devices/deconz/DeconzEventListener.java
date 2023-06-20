@@ -26,6 +26,7 @@ class DeconzEventListener extends TextWebSocketHandler {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final List<IDeconzPowerMeasurementEventListener> powerMeasurementEventListeners = new ArrayList<>();
     private final List<IDeconzDeviceStateEventListener> deviceStateEventListeners = new ArrayList<>();
+    private final List<IDeconzDeviceRegisteredListener> deviceRegisteredListeners = new ArrayList<>();
     private Integer reconnectDelaySeconds = INITIAL_RECONNECT_DELAY_SECONDS;
     private final AtomicBoolean isReconnectRunning = new AtomicBoolean(false);
     private final ScheduledExecutorService reconnectScheduler = Executors.newSingleThreadScheduledExecutor();
@@ -128,5 +129,8 @@ class DeconzEventListener extends TextWebSocketHandler {
                 });
     }
 
+    public void listenToDeviceRegisteredEvent(IDeconzDeviceRegisteredListener listener) {
+        deviceRegisteredListeners.add(listener);
+    }
 }
 

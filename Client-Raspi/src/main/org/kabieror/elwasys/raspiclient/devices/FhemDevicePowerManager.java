@@ -1,5 +1,6 @@
 package org.kabieror.elwasys.raspiclient.devices;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.kabieror.elwasys.common.Device;
 import org.kabieror.elwasys.common.Execution;
 import org.kabieror.elwasys.raspiclient.application.ElwaManager;
@@ -16,6 +17,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -218,6 +220,16 @@ public class FhemDevicePowerManager implements IDevicePowerManager, ICloseListen
                     return DevicePowerState.UNKNOWN;
             }
         }
+    }
+
+    @Override
+    public boolean isDeviceRegistered(Device device) {
+        return true;
+    }
+
+    @Override
+    public Future<Boolean> registerDevice(Device device) {
+        throw new NotImplementedException("Not supported");
     }
 
     /**

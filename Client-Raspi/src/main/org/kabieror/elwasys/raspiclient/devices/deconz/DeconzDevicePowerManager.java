@@ -14,13 +14,16 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URI;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Future;
 
 public class DeconzDevicePowerManager implements IDevicePowerManager {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final DeconzApiAdapter apiAdapter;
     private final DeconzService deconzService;
+    private final DeconzRegistrationService registrationService;
 
     private final DeconzEventListener eventListener;
     private final List<IDevicePowerMeasurementHandler> powerMeasurementListeners = new ArrayList<>();
@@ -43,6 +46,8 @@ public class DeconzDevicePowerManager implements IDevicePowerManager {
         eventListener.start();
 
         deconzService = new DeconzService(apiAdapter, eventListener);
+
+        registrationService = new DeconzRegistrationService(apiAdapter, eventListener);
     }
 
     private void onPowerMeasurementReceived(DeconzEvent e) {
@@ -72,6 +77,40 @@ public class DeconzDevicePowerManager implements IDevicePowerManager {
     public DevicePowerState getState(Device device) throws InterruptedException, FhemException, IOException {
         var isOn = deconzService.getDeviceState(device.getDeconzUuid()).on();
         return isOn ? DevicePowerState.ON : DevicePowerState.OFF;
+    }
+
+    @Override
+    public boolean isDeviceRegistered(Device device) {
+        return device.getDeconzUuid() != null;
+    }
+
+    @Override
+    public Future<Boolean> registerDevice(Device device) {
+        return registrationService.scanForNewDevice().thenApply(uuid -> {
+            if (uuid != null) {
+                try {
+                    device.modify(
+                            device.getName(),
+                            device.getPosition(),
+                            device.getLocation(),
+                            device.getFhemName(),
+                            device.getFhemSwitchName(),
+                            device.getFhemPowerName(),
+                            uuid,
+                            device.getAutoEndPowerThreashold(),
+                            device.getAutoEndWaitTime(),
+                            device.isEnabled(),
+                            device.getPrograms(),
+                            device.getValidUserGroups());
+                } catch (SQLException e) {
+                    logger.error("Failed to update device.", e);
+                    return false;
+                }
+                return true;
+            } else {
+                return false;
+            }
+        });
     }
 
     @Override
