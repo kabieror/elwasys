@@ -33,7 +33,7 @@ public class BacklightManager implements ICloseListener {
     /**
      * Zeit bis zum Abdunkeln des Displays
      */
-    private final Duration displayTimeout;
+    private Duration displayTimeout = Duration.ofSeconds(60);
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**

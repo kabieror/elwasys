@@ -7,8 +7,6 @@ import javafx.scene.Scene;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Startpunkt der Anwendung. Kommandozeilen-Parameter: -f Startet die Anwendung
@@ -31,7 +29,6 @@ public class Main extends Application {
      * Gibt an, ob der PowerManager ohne Funktion bleiben soll.
      */
     public static boolean dry = false;
-    private static Logger logger = LoggerFactory.getLogger(Main.class);
     /**
      * Gibt an, ob die Anwendung im Vollbildmodus starten soll.
      */

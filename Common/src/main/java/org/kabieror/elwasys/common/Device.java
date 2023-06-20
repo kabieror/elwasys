@@ -63,6 +63,11 @@ public class Device {
     private String fhemPowerName;
 
     /**
+     * Die ID des Gerätes in Deconz (Zigbee).
+     */
+    private String deconzUuid;
+
+    /**
      * Der Grenzwert für die Leistungsabnahme des Geräts, unter welchem ein
      * darauf laufendes Programm automatisch beendet wird.
      */
@@ -124,12 +129,13 @@ public class Device {
      * @param dataManager Der Datenmanager
      * @param name        Der Name des neuen Geräts
      * @param location    Der Standort des neuen Geräts
+     * @param deconz_uuid
      * @param enabled     Ob das Gerät aktiv ist
      * @param programs    Die Programme, die auf dem Gerät verwendet werden können
      * @throws SQLException Falls ein Fehler beim Eintragen in die Datenbank auftritt
      */
     public Device(DataManager dataManager, String name, int position, Location location, String fhem_name,
-                  String fhem_switch_name, String fhem_power_name, float autoEndPowerThreashold,
+                  String fhem_switch_name, String fhem_power_name, String deconz_uuid, float autoEndPowerThreashold,
                   Duration autoEndWaitTime, boolean enabled, List<Program> programs, List<UserGroup> validUserGroups)
             throws SQLException {
         this.dataManager = dataManager;
@@ -140,6 +146,7 @@ public class Device {
         this.fhemName = fhem_name;
         this.fhemSwitchName = fhem_switch_name;
         this.fhemPowerName = fhem_power_name;
+        this.deconzUuid = deconz_uuid;
         this.autoEndPowerThreashold = autoEndPowerThreashold;
         this.autoEndWaitTime = autoEndWaitTime;
         this.enabled = enabled;
@@ -148,8 +155,8 @@ public class Device {
 
         final PreparedStatement s = this.dataManager.getConnection().prepareStatement(
                 "INSERT INTO devices (name, position, location_id, fhem_name, " +
-                        "fhem_switch_name, fhem_power_name, auto_end_power_threashold, auto_end_wait_time, " +
-                        "enabled) VALUES (?, ?, ?, ?, " + "?, ?, ?, ?, " + "?)", Statement.RETURN_GENERATED_KEYS);
+                        "fhem_switch_name, fhem_power_name, deconz_uuid, auto_end_power_threashold, auto_end_wait_time, " +
+                        "enabled) VALUES (?, ?, ?, ?, " + "?, ?, ?, ?, ?, " + "?)", Statement.RETURN_GENERATED_KEYS);
 
         int i = 1;
         s.setString(i++, name);
@@ -158,8 +165,9 @@ public class Device {
         s.setString(i++, fhem_name);
         s.setString(i++, fhem_switch_name);
         s.setString(i++, fhem_power_name);
+        s.setString(i++, deconz_uuid);
         s.setFloat(i++, autoEndPowerThreashold);
-        s.setInt(i++, new Long(autoEndWaitTime.getSeconds()).intValue());
+        s.setInt(i++, (int)autoEndWaitTime.getSeconds());
         s.setBoolean(i++, enabled);
         s.executeUpdate();
 
@@ -214,18 +222,19 @@ public class Device {
     /**
      * Verändert das Gerät
      *
-     * @param name     Der neue Name des Geräts
-     * @param location Der neue Standort des Geräts
-     * @param enabled  Der neue Aktivierungs-Zustand des Geräts
-     * @param programs Die neuen Programm des Geräts
+     * @param name      Der neue Name des Geräts
+     * @param location  Der neue Standort des Geräts
+     * @param deconzUuid
+     * @param enabled   Der neue Aktivierungs-Zustand des Geräts
+     * @param programs  Die neuen Programm des Geräts
      * @throws SQLException Falls beim Aktualisieren der Datenbank ein Fehler auftritt
      */
     public void modify(String name, int position, Location location, String fhemName, String fhemSwitchName,
-                       String fhemPowerName, float autoEndPowerThreashold, Duration autoEndWaitTime, boolean enabled,
+                       String fhemPowerName, String deconzUuid, float autoEndPowerThreashold, Duration autoEndWaitTime, boolean enabled,
                        List<Program> programs, List<UserGroup> validUserGroups) throws SQLException {
         final PreparedStatement s = this.dataManager.getConnection().prepareStatement(
                 "UPDATE devices SET name=?, position=?, location_id=?, fhem_name=?, fhem_switch_name=?, " +
-                        "fhem_power_name=?, " +
+                        "fhem_power_name=?, deconz_uuid=?, " +
                         "auto_end_power_threashold=?, auto_end_wait_time=?, enabled=? WHERE id=?");
         {
             int i = 1;
@@ -235,8 +244,9 @@ public class Device {
             s.setString(i++, fhemName);
             s.setString(i++, fhemSwitchName);
             s.setString(i++, fhemPowerName);
+            s.setString(i++, deconzUuid);
             s.setFloat(i++, autoEndPowerThreashold);
-            s.setInt(i++, new Long(autoEndWaitTime.getSeconds()).intValue());
+            s.setInt(i++, (int)autoEndWaitTime.getSeconds());
             s.setBoolean(i++, enabled);
             s.setInt(i++, this.id);
         }
@@ -249,6 +259,7 @@ public class Device {
         this.fhemName = fhemName;
         this.fhemSwitchName = fhemSwitchName;
         this.fhemPowerName = fhemPowerName;
+        this.deconzUuid = deconzUuid;
         this.autoEndPowerThreashold = autoEndPowerThreashold;
         this.autoEndWaitTime = autoEndWaitTime;
         this.enabled = enabled;
@@ -353,6 +364,7 @@ public class Device {
         this.fhemName = res.getString("fhem_name");
         this.fhemSwitchName = res.getString("fhem_switch_name");
         this.fhemPowerName = res.getString("fhem_power_name");
+        this.deconzUuid = res.getString("deconz_uuid");
         this.autoEndPowerThreashold = res.getFloat("auto_end_power_threashold");
         this.autoEndWaitTime = Duration.ofSeconds(res.getInt("auto_end_wait_time"));
         this.enabled = res.getBoolean("enabled");
@@ -407,6 +419,10 @@ public class Device {
 
     public String getFhemPowerName() {
         return this.fhemPowerName;
+    }
+
+    public String getDeconzUuid() {
+        return this.deconzUuid;
     }
 
     public float getAutoEndPowerThreashold() {

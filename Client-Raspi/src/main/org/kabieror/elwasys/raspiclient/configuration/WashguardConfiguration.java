@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.time.Duration;
+import java.util.regex.Pattern;
 
 /**
  * Diese Klasse verwaltet die Konfiguration
@@ -26,8 +27,6 @@ public class WashguardConfiguration extends ConfigurationManager {
     private final File uidFile = new File(System.getProperty("user.dir") + DS + ".client-uid");
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private String uid = null;
-    private Integer singleInstancePort;
-
     /**
      * Constructor
      *
@@ -45,6 +44,32 @@ public class WashguardConfiguration extends ConfigurationManager {
     @Override
     public InputStream getDefaultsFileStream() {
         return WashguardConfiguration.class.getResourceAsStream(DEFAULTS_FILE_NAME);
+    }
+
+    /**
+     * The DeConz server address.
+     * If this value is not specified, then a fhem connection will be opened.
+     */
+    public String getDeconzServer() {
+        var server = this.props.getProperty("deconz.server").trim();
+        if (!Pattern.matches("^https?://.*", server)) {
+            server = "http://" + server;
+        }
+        return server;
+    }
+
+    /**
+     * The username to use for authentication at DeConz
+     */
+    public String getDeconzUser() {
+        return this.props.getProperty("deconz.user");
+    }
+
+    /**
+     * The password to use for authentication at DeConz
+     */
+    public String getDeconzPassword() {
+        return this.props.getProperty("deconz.password");
     }
 
     /**

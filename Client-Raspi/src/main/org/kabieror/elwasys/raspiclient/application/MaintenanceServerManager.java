@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Vector;
 
@@ -25,10 +24,6 @@ public class MaintenanceServerManager extends Thread implements ICloseListener, 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final ElwaManager manager;
-    /**
-     * Der Zeitpunkt des Starts des Waschwächters.
-     */
-    private final LocalDateTime starupTime = LocalDateTime.now();
     private MaintenanceClient client;
 
     public MaintenanceServerManager(ElwaManager manager) {

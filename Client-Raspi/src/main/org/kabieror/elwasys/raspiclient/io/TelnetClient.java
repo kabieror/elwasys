@@ -32,11 +32,6 @@ public class TelnetClient {
     private Socket connection;
     private DataOutputStream out;
     private BufferedReader in;
-    /**
-     * This thread is being interrupted when a new answer has been received from
-     * the server.
-     */
-    private Thread newAnswerBlockerThread;
     private Thread dataReceiverThread;
 
     /**

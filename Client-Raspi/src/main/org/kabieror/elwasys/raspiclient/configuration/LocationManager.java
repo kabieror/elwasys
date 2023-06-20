@@ -23,16 +23,12 @@ public class LocationManager implements ICloseListener {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private final WashguardConfiguration config;
-
     private final Location location;
 
     private final ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
 
     public LocationManager(WashguardConfiguration config)
             throws SQLException, LocationOccupiedException {
-        this.config = config;
-
         this.location = ElwaManager.instance.getDataRetriever().getLocation(config.getLocationName());
 
         if (this.location == null) {

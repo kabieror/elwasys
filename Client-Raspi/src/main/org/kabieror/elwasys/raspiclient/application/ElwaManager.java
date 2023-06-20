@@ -2,10 +2,14 @@ package org.kabieror.elwasys.raspiclient.application;
 
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+
+import org.apache.commons.lang3.StringUtils;
 import org.kabieror.elwasys.common.*;
 import org.kabieror.elwasys.raspiclient.configuration.LocationManager;
 import org.kabieror.elwasys.raspiclient.configuration.WashguardConfiguration;
-import org.kabieror.elwasys.raspiclient.executions.DevicePowerManager;
+import org.kabieror.elwasys.raspiclient.devices.deconz.DeconzDevicePowerManager;
+import org.kabieror.elwasys.raspiclient.devices.FhemDevicePowerManager;
+import org.kabieror.elwasys.raspiclient.devices.IDevicePowerManager;
 import org.kabieror.elwasys.raspiclient.executions.ExecutionManager;
 import org.kabieror.elwasys.raspiclient.executions.FhemException;
 import org.kabieror.elwasys.raspiclient.io.CardReader;
@@ -36,8 +40,6 @@ public class ElwaManager {
 
     private final MaintenanceServerManager maintenanceServerManager;
 
-    private SingleInstanceManager singleInstanceManager;
-
     /**
      * Listener
      */
@@ -63,7 +65,7 @@ public class ElwaManager {
      * Der Manager für das freigeben und abschalten des Stroms von verwalteten
      * Geräten
      */
-    private DevicePowerManager devicePowerManager;
+    private IDevicePowerManager devicePowerManager;
 
     /**
      * Der Manager für die Registrierung auf einen Ort.
@@ -135,8 +137,18 @@ public class ElwaManager {
         // Lade Ort
         this.thisLocation = this.dataManager.getLocation(this.configurationManager.getLocationName());
 
-        this.devicePowerManager = new DevicePowerManager(this.configurationManager);
-        this.executionManager = new ExecutionManager();
+        if (StringUtils.isNotBlank(this.configurationManager.getDeconzServer())) {
+            this.logger.info("Using Deconz as gateway.");
+            this.devicePowerManager = new DeconzDevicePowerManager(this.configurationManager);
+        } else if (StringUtils.isNotBlank(this.configurationManager.getFhemConnectionString())) {
+            this.logger.info("Using fhem as gateway.");
+            this.devicePowerManager = new FhemDevicePowerManager(this.configurationManager);
+        } else {
+            this.logger.error("Application configuration is invalid. Could not find any device power gateway to use. " +
+                    "You must either provide a value for deconz.server or fhem.server");
+            System.exit(1);
+        }
+        this.executionManager = new ExecutionManager(this.devicePowerManager);
         this.mainFormController.initiate();
 
         // Setze unterbrochene Ausführungen fort
@@ -201,15 +213,6 @@ public class ElwaManager {
      */
     public ExecutionManager getExecutionManager() {
         return this.executionManager;
-    }
-
-    /**
-     * Gibt den Manager für das Schalten von Geräten zurück.
-     *
-     * @return Den Manager für das Schalten von Geräten.
-     */
-    public DevicePowerManager getDevicePowerManager() {
-        return this.devicePowerManager;
     }
 
     /**

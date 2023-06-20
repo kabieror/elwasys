@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.kabieror.elwasys</groupId>
 	<artifactId>raspi-client</artifactId>
-	<version>0.3.7-SNAPSHOT</version>
+	<version>0.0.0-local-development</version>
 	<name>elwasys client</name>
 	<description>The elwasys client for Raspberry Pi</description>
 
@@ -11,7 +11,7 @@
 		<dependency>
 			<groupId>org.kabieror.elwasys</groupId>
 			<artifactId>common</artifactId>
-			<version>0.3.7-SNAPSHOT</version>
+			<version>0.0.0-local-development</version>
 		</dependency>
 		<dependency>
 			<groupId>com.pi4j</groupId>
@@ -21,7 +21,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.12</version>
+			<version>4.13.1</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -32,12 +32,12 @@
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>1.1.3</version>
+			<version>1.2.9</version>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-core</artifactId>
-			<version>1.1.3</version>
+			<version>1.2.9</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.sps.pushover.net</groupId>
@@ -52,12 +52,12 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-email</artifactId>
-			<version>1.4</version>
+			<version>1.5</version>
 		</dependency>
 		<dependency>
           <groupId>org.apache.httpcomponents</groupId>
           <artifactId>httpclient</artifactId>
-          <version>4.3.6</version>
+          <version>4.5.13</version>
         </dependency>
         <dependency>
           <groupId>org.apache.httpcomponents</groupId>
@@ -72,15 +72,39 @@
         <dependency>
           <groupId>org.json</groupId>
           <artifactId>json</artifactId>
-          <version>20140107</version>
+          <version>20220320</version>
         </dependency>
 		<dependency>
             <groupId>com.mashape.unirest</groupId>
             <artifactId>unirest-java</artifactId>
             <version>1.4.9</version>
         </dependency>
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-controls</artifactId>
+			<version>20</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-fxml</artifactId>
+			<version>20</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-web</artifactId>
+			<version>20</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-websocket</artifactId>
+			<version>3.1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.10.1</version>
+		</dependency>
 	</dependencies>
-	
 	<build>
 		<sourceDirectory>src/main</sourceDirectory>
 		<testSourceDirectory>src/test</testSourceDirectory>
@@ -101,8 +125,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.3</version>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<source>16</source>
+					<target>16</target>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -126,6 +150,14 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.openjfx</groupId>
+				<artifactId>javafx-maven-plugin</artifactId>
+				<version>0.0.8</version>
+				<configuration>
+					<mainClass>org.kabieror.elwasys.raspiclient.application.Main</mainClass>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

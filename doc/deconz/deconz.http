@@ -1,0 +1,25 @@
+
+@url = http://192.168.0.15:8900
+# @name login
+POST {{url}}/api
+Authorization: Basic delight:elwasys2014
+
+{
+    "devicetype": "tester"
+}
+
+###
+@token = {{login.response.body.0.success.username}}
+#
+GET {{url}}/api/{{token}}/config
+
+###
+
+GET {{url}}/api/{{token}}/lights
+
+###
+
+GET {{url}}/api/{{token}}/sensors
+
+# a4:c1:38:ae:c6:5e:e1:02-01
+# a4:c1:38:ae:c6:5e:e1:02-01

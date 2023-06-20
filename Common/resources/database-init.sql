@@ -28,7 +28,7 @@ CREATE TABLE config
   key   VARCHAR(50) NOT NULL UNIQUE,
   value TEXT
 );
-INSERT INTO config (key, value) VALUES ('db.version', '0.3.1');
+INSERT INTO config (key, value) VALUES ('db.version', '0.4.0');
 INSERT INTO config (key, value) VALUES ('authkey.prefix', random_string(2));
 /* Dauer einer Reservierung in Sekunden */
 INSERT INTO config (key, value) VALUES ('reservation.duration', 900);
@@ -138,9 +138,10 @@ CREATE TABLE devices
   name                      VARCHAR(50)                  NOT NULL,
   position                  INT                          NOT NULL DEFAULT 0,
   location_id               INTEGER REFERENCES locations NOT NULL DEFAULT 1,
-  fhem_name                 VARCHAR(50)                  NOT NULL,
-  fhem_switch_name          VARCHAR(50)                  NOT NULL,
-  fhem_power_name           VARCHAR(50)                  NOT NULL,
+  fhem_name                 VARCHAR(50)                  NOT NULL DEFAULT '',
+  fhem_switch_name          VARCHAR(50)                  NOT NULL DEFAULT '',
+  fhem_power_name           VARCHAR(50)                  NOT NULL DEFAULT '',
+  deconz_uuid               VARCHAR(64)                  DEFAULT '',
   auto_end_power_threashold REAL                         NOT NULL DEFAULT 0.5,
   auto_end_wait_time        INT                          NOT NULL DEFAULT 20,
   enabled                   BOOLEAN                      NOT NULL DEFAULT TRUE
