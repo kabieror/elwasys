@@ -38,7 +38,7 @@ jobs:
         replacement: # default is $1
 
     - name: Apply version number
-      run: sed -iE "s/0.0.0-local-development/${{ github.event.release.tag_name }}" Common/pom.xml Client-Raspi/pom.xml Common/src/main/java/org/kabieror/elwasys/common/Utilities.java
+      run: sed -iE "s/0.0.0-local-development/${{ github.event.release.tag_name }}/g" Common/pom.xml Client-Raspi/pom.xml Common/src/main/java/org/kabieror/elwasys/common/Utilities.java
 
     - name: Build Common
       run: mvn install
