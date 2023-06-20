@@ -56,4 +56,3 @@ jobs:
         asset_name: raspi-client-${{ github.event.release.tag_name }}.jar
         tag: ${{ github.event.release.tag_name }}
         overwrite: true
-        body: "Raspberry Pi Java Client"
