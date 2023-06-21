@@ -3,8 +3,10 @@ package org.kabieror.elwasys.raspiclient.devices.deconz;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import org.kabieror.elwasys.raspiclient.configuration.WashguardConfiguration;
+import org.kabieror.elwasys.raspiclient.devices.deconz.model.DeconzChangeType;
 import org.kabieror.elwasys.raspiclient.devices.deconz.model.DeconzConfig;
 import org.kabieror.elwasys.raspiclient.devices.deconz.model.DeconzEvent;
+import org.kabieror.elwasys.raspiclient.devices.deconz.model.DeconzResourceType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.socket.CloseStatus;
@@ -95,12 +97,24 @@ public class DeconzEventListener extends TextWebSocketHandler {
         byte[] rawBytes = message.getPayload().getBytes(StandardCharsets.UTF_8);
         try {
             DeconzEvent event = gson.fromJson(new String(rawBytes), DeconzEvent.class);
-            if (event.r().equals("sensors") && event.state() != null && event.state().power() != null) {
+
+            if (event.r() == DeconzResourceType.sensors
+                    && event.state() != null
+                    && event.state().power() != null) {
                 this.powerMeasurementEventListeners.forEach(
                         l -> l.onPowerMeasurementReceived(event));
-            } else if (event.r().equals("lights") && event.state() != null && event.state().on() != null) {
+
+            } else if (event.e() == DeconzChangeType.added
+                    && event.r() == DeconzResourceType.lights) {
+                this.deviceRegisteredListeners.forEach(
+                        l -> l.onDeviceRegistered(event.uniqueid()));
+
+            } else if (event.r() == DeconzResourceType.lights
+                    && event.state() != null
+                    && event.state().on() != null) {
                 this.deviceStateEventListeners.forEach(
                         l -> l.onDeviceStateChanged(event.uniqueid(), event.state().on()));
+
             }
         } catch (JsonSyntaxException e) {
             this.logger.error("Failed to read event data.", e);

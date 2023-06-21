@@ -369,6 +369,10 @@ public class DeviceListEntry implements Initializable, IViewController, IExecuti
             return;
         }
 
+        if (this.state == DeviceListEntryState.UNREGISTERED) {
+            this.state = DeviceListEntryState.FREE;
+        }
+
         if (this.registrationService != null && !registrationService.isDeviceRegistered(this.device)) {
             this.state = DeviceListEntryState.UNREGISTERED;
         } else if (this.device.isEnabled() && this.state == DeviceListEntryState.DISABLED) {
@@ -603,6 +607,11 @@ public class DeviceListEntry implements Initializable, IViewController, IExecuti
                     .registerDevice(this.device)
                     .join();
             registerButton.getStyleClass().remove("active");
+            try {
+                device.update();
+            } catch (SQLException | NoDataFoundException e) {
+                logger.error("Failed to refresh device data.", e);
+            }
             refresh(true);
         });
     }

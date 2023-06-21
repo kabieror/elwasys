@@ -25,6 +25,7 @@ public class DeconzRegistrationService implements IDeviceRegistrationService {
         this.apiAdapter = apiAdapter;
         eventListener.listenToDeviceRegisteredEvent(uuid -> {
             if (currentRegistrationFuture != null && !currentRegistrationFuture.isDone()) {
+                logger.debug("Received registration event for device %s".formatted(uuid));
                 currentRegistrationFuture.complete(uuid);
             }
         });
@@ -39,6 +40,7 @@ public class DeconzRegistrationService implements IDeviceRegistrationService {
     public CompletableFuture<Boolean> registerDevice(Device device) {
         return scanForNewDevice().thenApply(uuid -> {
             if (uuid != null) {
+                logger.info("Found new device %s. Updating database.".formatted(uuid));
                 try {
                     device.modify(
                             device.getName(),
@@ -59,6 +61,7 @@ public class DeconzRegistrationService implements IDeviceRegistrationService {
                 }
                 return true;
             } else {
+                logger.info("No new devices found.");
                 return false;
             }
         });
