@@ -12,6 +12,7 @@ import org.kabieror.elwasys.raspiclient.devices.IDeviceRegistrationService;
 import org.kabieror.elwasys.raspiclient.devices.deconz.DeconzApiAdapter;
 import org.kabieror.elwasys.raspiclient.devices.deconz.DeconzDevicePowerManager;
 import org.kabieror.elwasys.raspiclient.devices.deconz.DeconzEventListener;
+import org.kabieror.elwasys.raspiclient.devices.deconz.DeconzRegistrationService;
 import org.kabieror.elwasys.raspiclient.executions.ExecutionManager;
 import org.kabieror.elwasys.raspiclient.executions.FhemException;
 import org.kabieror.elwasys.raspiclient.io.CardReader;
@@ -148,6 +149,7 @@ public class ElwaManager {
                 var apiAdapter = new DeconzApiAdapter(this.configurationManager);
                 deconzEventListener = new DeconzEventListener(this.configurationManager, apiAdapter);
                 deconzEventListener.start();
+                deviceRegistrationService = new DeconzRegistrationService(apiAdapter, deconzEventListener);
                 this.devicePowerManager = new DeconzDevicePowerManager(apiAdapter, deconzEventListener);
             } else if (StringUtils.isNotBlank(this.configurationManager.getFhemConnectionString())) {
                 this.logger.info("Using fhem as gateway.");

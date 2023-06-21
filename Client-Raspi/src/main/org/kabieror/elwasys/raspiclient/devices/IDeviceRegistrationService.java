@@ -2,7 +2,7 @@ package org.kabieror.elwasys.raspiclient.devices;
 
 import org.kabieror.elwasys.common.Device;
 
-import java.util.concurrent.Future;
+import java.util.concurrent.CompletableFuture;
 
 public interface IDeviceRegistrationService {
     /**
@@ -13,5 +13,5 @@ public interface IDeviceRegistrationService {
     /**
      * Tries to find a new remote socket for the given device.
      */
-    Future<Boolean> registerDevice(Device device);
+     CompletableFuture<Boolean> registerDevice(Device device);
 }

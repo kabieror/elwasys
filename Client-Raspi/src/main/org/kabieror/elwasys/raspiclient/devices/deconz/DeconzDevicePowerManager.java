@@ -54,6 +54,10 @@ public class DeconzDevicePowerManager implements IDevicePowerManager {
 
     @Override
     public DevicePowerState getState(Device device) throws InterruptedException, FhemException, IOException {
+        if (device.getDeconzUuid() == null) {
+            logger.warn("No deCONZ device registered for device %s".formatted(device.getId()));
+            return DevicePowerState.UNKNOWN;
+        }
         var isOn = deconzService.getDeviceState(device.getDeconzUuid()).on();
         return isOn ? DevicePowerState.ON : DevicePowerState.OFF;
     }

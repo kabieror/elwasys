@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.net.http.HttpRequest;
 import java.sql.SQLException;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 public class DeconzRegistrationService implements IDeviceRegistrationService {
@@ -37,7 +36,7 @@ public class DeconzRegistrationService implements IDeviceRegistrationService {
     }
 
     @Override
-    public Future<Boolean> registerDevice(Device device) {
+    public CompletableFuture<Boolean> registerDevice(Device device) {
         return scanForNewDevice().thenApply(uuid -> {
             if (uuid != null) {
                 try {
@@ -69,25 +68,32 @@ public class DeconzRegistrationService implements IDeviceRegistrationService {
         if (currentRegistrationFuture != null && !currentRegistrationFuture.isDone()) {
             throw new RuntimeException("Another registration process has already been started.");
         }
-
-        if (!enablePairingForSeconds(PAIRING_TIME_SECONDS)) return null;
-
+        logger.info("Scanning for new device");
         currentRegistrationFuture = new CompletableFuture<>();
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                enablePairingForSeconds(PAIRING_TIME_SECONDS);
+            } catch (IOException | InterruptedException e) {
+                throw new RuntimeException(e);
+            }
 
-        return currentRegistrationFuture
-                .orTimeout(PAIRING_TIME_SECONDS, TimeUnit.SECONDS);
+            return currentRegistrationFuture
+                    .orTimeout(PAIRING_TIME_SECONDS, TimeUnit.SECONDS)
+                    .exceptionally(ex -> {
+                        logger.warn("Scanning for devices failed.", ex);
+                        try {
+                            enablePairingForSeconds(0);
+                        } catch (IOException | InterruptedException e) {
+                            logger.warn("Failed to reset pairing time", e);
+                        }
+                        return null;
+                    }).join();
+        });
     }
 
-    private boolean enablePairingForSeconds(int pairingSeconds) {
-        try {
-            var payload = gson.toJson(new DeconzConfigPariing(pairingSeconds));
-            apiAdapter.request("config", r -> r.PUT(HttpRequest.BodyPublishers.ofString(payload)));
-        } catch (IOException e) {
-            logger.error("Failed to configure deCONZ", e);
-        } catch (InterruptedException e) {
-            logger.warn("Registration cancelled while configuring deCONZ");
-            return false;
-        }
-        return true;
+    private void enablePairingForSeconds(int pairingSeconds) throws IOException, InterruptedException {
+        var payload = gson.toJson(new DeconzConfigPariing(pairingSeconds));
+        apiAdapter.request("config", r -> r.PUT(HttpRequest.BodyPublishers.ofString(payload)));
+        logger.info("Pairing is now active for %s seconds.".formatted(pairingSeconds));
     }
 }

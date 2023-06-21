@@ -15,6 +15,7 @@ import javafx.scene.layout.VBox;
 import org.kabieror.elwasys.common.*;
 import org.kabieror.elwasys.raspiclient.application.ActionContainer;
 import org.kabieror.elwasys.raspiclient.application.ElwaManager;
+import org.kabieror.elwasys.raspiclient.devices.IDeviceRegistrationService;
 import org.kabieror.elwasys.raspiclient.executions.IExecutionErrorListener;
 import org.kabieror.elwasys.raspiclient.executions.IExecutionFinishedListener;
 import org.kabieror.elwasys.raspiclient.executions.IExecutionStartedListener;
@@ -35,6 +36,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.ResourceBundle;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -112,6 +115,8 @@ public class DeviceListEntry implements Initializable, IViewController, IExecuti
     @FXML
     private VBox errorRetryButton;
     @FXML
+    private VBox registerButton;
+    @FXML
     private Label remainingCaption;
     @FXML
     private HBox remainingContainer;
@@ -131,6 +136,10 @@ public class DeviceListEntry implements Initializable, IViewController, IExecuti
     private ChangeListener<User> registeredUserChangedListener = (observable, oldValue, newValue) -> {
         this.applyUserStyle(newValue);
     };
+
+    private ScheduledExecutorService deviceRegistrationScheduler = Executors.newSingleThreadScheduledExecutor();
+
+    private IDeviceRegistrationService registrationService;
 
     public DeviceListEntry() {
 
@@ -167,6 +176,7 @@ public class DeviceListEntry implements Initializable, IViewController, IExecuti
     @Override
     public void onStart(MainFormController mfc) {
         this.mainFormController = mfc;
+        this.registrationService = ElwaManager.instance.getDeviceRegistrationService();
 
         // Lade letzten Benutzer
         User lastUser = null;
@@ -359,7 +369,9 @@ public class DeviceListEntry implements Initializable, IViewController, IExecuti
             return;
         }
 
-        if (this.device.isEnabled() && this.state == DeviceListEntryState.DISABLED) {
+        if (this.registrationService != null && !registrationService.isDeviceRegistered(this.device)) {
+            this.state = DeviceListEntryState.UNREGISTERED;
+        } else if (this.device.isEnabled() && this.state == DeviceListEntryState.DISABLED) {
             // Gerät nur aktivieren, wenn es zuvor deaktiviert war
             this.state = DeviceListEntryState.FREE;
         } else if (!this.device.isEnabled()) {
@@ -374,6 +386,7 @@ public class DeviceListEntry implements Initializable, IViewController, IExecuti
                 UiUtilities.setStyleClass(this.deviceListEntry, "status-disabled", false);
                 UiUtilities.setStyleClass(this.deviceListEntry, "status-door-opened", false);
                 UiUtilities.setStyleClass(this.deviceListEntry, "status-occupied", false);
+                UiUtilities.setStyleClass(this.deviceListEntry, "status-unregistered", false);
                 UiUtilities.setStyleClass(this.deviceListEntry, "status-error", false);
                 UiUtilities.setStyleClass(this.deviceListEntry, "locked", false);
                 this.deviceListEntry.setDisable(false);
@@ -386,6 +399,7 @@ public class DeviceListEntry implements Initializable, IViewController, IExecuti
                 UiUtilities.setStyleClass(this.deviceListEntry, "status-disabled", false);
                 UiUtilities.setStyleClass(this.deviceListEntry, "status-door-opened", false);
                 UiUtilities.setStyleClass(this.deviceListEntry, "status-occupied", false);
+                UiUtilities.setStyleClass(this.deviceListEntry, "status-unregistered", false);
                 UiUtilities.setStyleClass(this.deviceListEntry, "status-error", false);
                 UiUtilities.setStyleClass(this.deviceListEntry, "locked", false);
                 this.deviceListEntry.setDisable(false);
@@ -404,6 +418,7 @@ public class DeviceListEntry implements Initializable, IViewController, IExecuti
                 UiUtilities.setStyleClass(this.deviceListEntry, "status-disabled", false);
                 UiUtilities.setStyleClass(this.deviceListEntry, "status-door-opened", false);
                 UiUtilities.setStyleClass(this.deviceListEntry, "status-occupied", false);
+                UiUtilities.setStyleClass(this.deviceListEntry, "status-unregistered", false);
                 UiUtilities.setStyleClass(this.deviceListEntry, "status-error", false);
                 UiUtilities.setStyleClass(this.deviceListEntry, "locked", true);
                 this.deviceListEntry.setDisable(true);
@@ -430,6 +445,7 @@ public class DeviceListEntry implements Initializable, IViewController, IExecuti
                 UiUtilities.setStyleClass(this.deviceListEntry, "status-occupied", false);
                 UiUtilities.setStyleClass(this.deviceListEntry, "status-door-opened", false);
                 UiUtilities.setStyleClass(this.deviceListEntry, "status-disabled", true);
+                UiUtilities.setStyleClass(this.deviceListEntry, "status-unregistered", false);
                 UiUtilities.setStyleClass(this.deviceListEntry, "status-error", false);
                 UiUtilities.setStyleClass(this.deviceListEntry, "locked", false);
                 this.deviceListEntry.setDisable(true);
@@ -439,7 +455,7 @@ public class DeviceListEntry implements Initializable, IViewController, IExecuti
                 UiUtilities.setStyleClass(this.deviceListEntry, "status-occupied", false);
                 UiUtilities.setStyleClass(this.deviceListEntry, "status-door-opened", false);
                 UiUtilities.setStyleClass(this.deviceListEntry, "status-disabled", false);
-                UiUtilities.setStyleClass(this.deviceListEntry, "status-unregistered", false);
+                UiUtilities.setStyleClass(this.deviceListEntry, "status-unregistered", true);
                 UiUtilities.setStyleClass(this.deviceListEntry, "status-error", false);
                 UiUtilities.setStyleClass(this.deviceListEntry, "locked", false);
                 this.deviceListEntry.setDisable(false);
@@ -580,9 +596,16 @@ public class DeviceListEntry implements Initializable, IViewController, IExecuti
     }
 
     public void onRegister(MouseEvent event) {
-        ElwaManager.instance.getDeviceRegistrationService().registerDevice(this.device);
+        deviceRegistrationScheduler.submit(() -> {
+            logger.info("Scanning for new actor for device " + device.getId());
+            registerButton.getStyleClass().add("active");
+            ElwaManager.instance.getDeviceRegistrationService()
+                    .registerDevice(this.device)
+                    .join();
+            registerButton.getStyleClass().remove("active");
+            refresh(true);
+        });
     }
-
 
     public void setDevice(Device device) {
         this.device = device;
