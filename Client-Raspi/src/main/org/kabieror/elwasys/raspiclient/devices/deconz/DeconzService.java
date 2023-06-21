@@ -25,7 +25,7 @@ class DeconzService {
         this.adapter = adapter;
         this.eventListener = eventListener;
         this.eventListener.listenToDeviceStateEvent((uuid, state) -> {
-            logger.info("Received update for " + uuid + ": " + state);
+            logger.debug("Received update for " + uuid + ": " + state);
             deviceStateAwaitingMap.put(uuid, state);
         });
     }
@@ -57,7 +57,7 @@ class DeconzService {
     }
 
     private void waitForDeviceState(String deviceUuid, boolean newState) throws InterruptedException, DeconzException {
-        logger.info("Waiting for device " + deviceUuid);
+        logger.info("Waiting for deCONZ device " + deviceUuid);
         Boolean result = deviceStateAwaitingMap.get(deviceUuid, 5, TimeUnit.SECONDS);
         if (result == null || !result.equals(newState)) {
             throw new DeconzException("Das Gerät ist nicht erreichbar.");
