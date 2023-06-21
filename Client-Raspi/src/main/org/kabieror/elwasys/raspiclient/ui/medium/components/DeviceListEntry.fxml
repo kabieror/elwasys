@@ -69,7 +69,7 @@
         <VBox fx:id="registerButton" styleClass="device-button"
               onMouseClicked="#onRegister" managed="${registerButton.visible}">
             <Label styleClass="icon-basic" text=""/>
-            <Label styleClass="caption" text="Aktor registrieren"/>
+            <Label styleClass="caption" text="Suche nach Steckdose"/>
         </VBox>
     </VBox>
 </GridPane>
