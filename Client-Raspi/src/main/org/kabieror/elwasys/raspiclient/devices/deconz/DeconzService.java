@@ -24,10 +24,7 @@ class DeconzService {
     public DeconzService(DeconzApiAdapter adapter, DeconzEventListener eventListener) {
         this.adapter = adapter;
         this.eventListener = eventListener;
-        this.eventListener.listenToDeviceStateEvent((uuid, state) -> {
-            logger.debug("Received update for " + uuid + ": " + state);
-            deviceStateAwaitingMap.put(uuid, state);
-        });
+        this.eventListener.listenToDeviceStateEvent(deviceStateAwaitingMap::put);
     }
 
     public DeconzDeviceState getDeviceState(String deconzUuid) throws IOException, InterruptedException {
