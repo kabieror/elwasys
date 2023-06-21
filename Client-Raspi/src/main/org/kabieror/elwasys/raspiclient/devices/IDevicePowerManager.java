@@ -4,7 +4,6 @@ import org.kabieror.elwasys.common.Device;
 import org.kabieror.elwasys.raspiclient.executions.FhemException;
 
 import java.io.IOException;
-import java.util.concurrent.Future;
 
 public interface IDevicePowerManager {
 
@@ -27,13 +26,6 @@ public interface IDevicePowerManager {
      */
     DevicePowerState getState(Device device) throws InterruptedException, FhemException, IOException;
 
-    /**
-     * Checks whether a device can be controlled.
-     */
-    boolean isDeviceRegistered(Device device);
 
-    /**
-     * Tries to find a new remote socket for the given device.
-     */
-    Future<Boolean> registerDevice(Device device);
 }
+

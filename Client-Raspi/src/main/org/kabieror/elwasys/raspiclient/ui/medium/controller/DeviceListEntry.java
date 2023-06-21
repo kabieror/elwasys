@@ -434,6 +434,16 @@ public class DeviceListEntry implements Initializable, IViewController, IExecuti
                 UiUtilities.setStyleClass(this.deviceListEntry, "locked", false);
                 this.deviceListEntry.setDisable(true);
                 this.statusText.set("deaktiviert");
+            case UNREGISTERED:
+                UiUtilities.setStyleClass(this.deviceListEntry, "status-free", false);
+                UiUtilities.setStyleClass(this.deviceListEntry, "status-occupied", false);
+                UiUtilities.setStyleClass(this.deviceListEntry, "status-door-opened", false);
+                UiUtilities.setStyleClass(this.deviceListEntry, "status-disabled", false);
+                UiUtilities.setStyleClass(this.deviceListEntry, "status-unregistered", false);
+                UiUtilities.setStyleClass(this.deviceListEntry, "status-error", false);
+                UiUtilities.setStyleClass(this.deviceListEntry, "locked", false);
+                this.deviceListEntry.setDisable(false);
+                this.statusText.set("Kein Aktor");
         }
     }
 
@@ -567,6 +577,10 @@ public class DeviceListEntry implements Initializable, IViewController, IExecuti
             this.mainFormController
                     .displayError("Interner Fehler", this.currentException.getLocalizedMessage(), ac, true);
         }
+    }
+
+    public void onRegister(MouseEvent event) {
+        ElwaManager.instance.getDeviceRegistrationService().registerDevice(this.device);
     }
 
 
@@ -720,5 +734,10 @@ public class DeviceListEntry implements Initializable, IViewController, IExecuti
          * Das Gerät ist deaktiviert
          */
         DISABLED,
+
+        /**
+         * Unregistered
+         */
+        UNREGISTERED,
     }
 }

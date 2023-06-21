@@ -2,6 +2,8 @@ package org.kabieror.elwasys.raspiclient.devices.deconz;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import org.kabieror.elwasys.raspiclient.configuration.WashguardConfiguration;
+import org.kabieror.elwasys.raspiclient.devices.deconz.model.DeconzConfig;
 import org.kabieror.elwasys.raspiclient.devices.deconz.model.DeconzEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +15,7 @@ import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.IOException;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +24,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-class DeconzEventListener extends TextWebSocketHandler {
+public class DeconzEventListener extends TextWebSocketHandler {
     private static final Integer INITIAL_RECONNECT_DELAY_SECONDS = 5;
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final List<IDeconzPowerMeasurementEventListener> powerMeasurementEventListeners = new ArrayList<>();
@@ -37,9 +40,13 @@ class DeconzEventListener extends TextWebSocketHandler {
     private String host;
     private int port;
 
-    public DeconzEventListener(String host, int port) {
-        this.host = host;
-        this.port = port;
+    public DeconzEventListener(WashguardConfiguration configuration, DeconzApiAdapter apiAdapter) throws IOException, InterruptedException {
+        var deconzUri = URI.create(configuration.getDeconzServer());
+        this.host = deconzUri.getHost();
+        var deconzConfig = apiAdapter.parseResponse(
+                apiAdapter.request("config", r -> r.GET()),
+                DeconzConfig.class);
+        this.port = deconzConfig.websocketport();
     }
 
     public void listenToPowerMeasurementReceived(IDeconzPowerMeasurementEventListener listener) {

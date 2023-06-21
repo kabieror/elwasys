@@ -2,14 +2,16 @@ package org.kabieror.elwasys.raspiclient.application;
 
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-
 import org.apache.commons.lang3.StringUtils;
 import org.kabieror.elwasys.common.*;
 import org.kabieror.elwasys.raspiclient.configuration.LocationManager;
 import org.kabieror.elwasys.raspiclient.configuration.WashguardConfiguration;
-import org.kabieror.elwasys.raspiclient.devices.deconz.DeconzDevicePowerManager;
 import org.kabieror.elwasys.raspiclient.devices.FhemDevicePowerManager;
 import org.kabieror.elwasys.raspiclient.devices.IDevicePowerManager;
+import org.kabieror.elwasys.raspiclient.devices.IDeviceRegistrationService;
+import org.kabieror.elwasys.raspiclient.devices.deconz.DeconzApiAdapter;
+import org.kabieror.elwasys.raspiclient.devices.deconz.DeconzDevicePowerManager;
+import org.kabieror.elwasys.raspiclient.devices.deconz.DeconzEventListener;
 import org.kabieror.elwasys.raspiclient.executions.ExecutionManager;
 import org.kabieror.elwasys.raspiclient.executions.FhemException;
 import org.kabieror.elwasys.raspiclient.io.CardReader;
@@ -66,6 +68,8 @@ public class ElwaManager {
      * Geräten
      */
     private IDevicePowerManager devicePowerManager;
+
+    private IDeviceRegistrationService deviceRegistrationService;
 
     /**
      * Der Manager für die Registrierung auf einen Ort.
@@ -129,34 +133,44 @@ public class ElwaManager {
     public void initiate()
             throws ClassNotFoundException, SQLException, IOException, InterruptedException,
             LocationOccupiedException, FhemException, NoDataFoundException, AlreadyRunningException {
-        this.logger.info("Starting up managers");
-        SingleInstanceManager.instance.start(this.configurationManager.getSingleInstancePort());
-        this.dataManager = new DataManager(this.configurationManager);
-        this.locationManager = new LocationManager(this.configurationManager);
+        DeconzEventListener deconzEventListener = null;
+        try {
+            this.logger.info("Starting up managers");
+            SingleInstanceManager.instance.start(this.configurationManager.getSingleInstancePort());
+            this.dataManager = new DataManager(this.configurationManager);
+            this.locationManager = new LocationManager(this.configurationManager);
 
-        // Lade Ort
-        this.thisLocation = this.dataManager.getLocation(this.configurationManager.getLocationName());
+            // Lade Ort
+            this.thisLocation = this.dataManager.getLocation(this.configurationManager.getLocationName());
 
-        if (StringUtils.isNotBlank(this.configurationManager.getDeconzServer())) {
-            this.logger.info("Using Deconz as gateway.");
-            this.devicePowerManager = new DeconzDevicePowerManager(this.configurationManager);
-        } else if (StringUtils.isNotBlank(this.configurationManager.getFhemConnectionString())) {
-            this.logger.info("Using fhem as gateway.");
-            this.devicePowerManager = new FhemDevicePowerManager(this.configurationManager);
-        } else {
-            this.logger.error("Application configuration is invalid. Could not find any device power gateway to use. " +
-                    "You must either provide a value for deconz.server or fhem.server");
-            System.exit(1);
-        }
-        this.executionManager = new ExecutionManager(this.devicePowerManager);
-        this.mainFormController.initiate();
+            if (StringUtils.isNotBlank(this.configurationManager.getDeconzServer())) {
+                this.logger.info("Using deCONZ as gateway.");
+                var apiAdapter = new DeconzApiAdapter(this.configurationManager);
+                deconzEventListener = new DeconzEventListener(this.configurationManager, apiAdapter);
+                deconzEventListener.start();
+                this.devicePowerManager = new DeconzDevicePowerManager(apiAdapter, deconzEventListener);
+            } else if (StringUtils.isNotBlank(this.configurationManager.getFhemConnectionString())) {
+                this.logger.info("Using fhem as gateway.");
+                this.devicePowerManager = new FhemDevicePowerManager(this.configurationManager);
+            } else {
+                this.logger.error("Application configuration is invalid. Could not find any device power gateway to use. " +
+                        "You must either provide a value for deconz.server or fhem.server");
+                System.exit(1);
+            }
+            this.executionManager = new ExecutionManager(this.devicePowerManager);
+            this.mainFormController.initiate();
 
-        // Setze unterbrochene Ausführungen fort
-        for (Device d : this.dataManager.getDevices()) {
-            Execution e = this.dataManager.getRunningExecution(d);
-            if (e != null) {
-                // Unterbrochene Ausführung gefunden
-                this.executionManager.startExecution(e);
+            // Setze unterbrochene Ausführungen fort
+            for (Device d : this.dataManager.getDevices()) {
+                Execution e = this.dataManager.getRunningExecution(d);
+                if (e != null) {
+                    // Unterbrochene Ausführung gefunden
+                    this.executionManager.startExecution(e);
+                }
+            }
+        } catch (Exception e) {
+            if (deconzEventListener != null) {
+                deconzEventListener.stop();
             }
         }
     }
@@ -213,6 +227,10 @@ public class ElwaManager {
      */
     public ExecutionManager getExecutionManager() {
         return this.executionManager;
+    }
+
+    public IDeviceRegistrationService getDeviceRegistrationService() {
+        return this.deviceRegistrationService;
     }
 
     /**

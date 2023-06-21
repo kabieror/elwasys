@@ -1,5 +1,15 @@
 package org.kabieror.elwasys.raspiclient.devices.deconz;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSyntaxException;
+import org.kabieror.elwasys.raspiclient.configuration.WashguardConfiguration;
+import org.kabieror.elwasys.raspiclient.devices.deconz.model.DeconzAuthenticationSuccessEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.URI;
@@ -9,17 +19,7 @@ import java.net.http.HttpResponse;
 import java.util.Base64;
 import java.util.function.Consumer;
 
-import org.kabieror.elwasys.raspiclient.devices.deconz.model.DeconzAuthenticationSuccessEntity;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSyntaxException;
-
-class DeconzApiAdapter {
+public class DeconzApiAdapter {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final Gson gson = new Gson();
     private String token;
@@ -29,10 +29,10 @@ class DeconzApiAdapter {
     private final String username;
     private final String password;
 
-    public DeconzApiAdapter(URI apiBase, String username, String password) {
-        this.apiBase = apiBase.resolve("api/");
-        this.username = username;
-        this.password = password;
+    public DeconzApiAdapter(WashguardConfiguration configuration) {
+        this.apiBase = URI.create(configuration.getDeconzServer()).resolve("api/");
+        this.username = configuration.getDeconzUser();
+        this.password = configuration.getDeconzPassword();
     }
 
     public HttpResponse<String> request(String apiPath, Consumer<HttpRequest.Builder> requestConfigureAction) throws IOException, InterruptedException {
