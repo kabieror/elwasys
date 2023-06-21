@@ -607,11 +607,6 @@ public class DeviceListEntry implements Initializable, IViewController, IExecuti
                     .registerDevice(this.device)
                     .join();
             registerButton.getStyleClass().remove("active");
-            try {
-                device.update();
-            } catch (SQLException | NoDataFoundException e) {
-                logger.error("Failed to refresh device data.", e);
-            }
             refresh(true);
         });
     }
