@@ -463,7 +463,7 @@ public class DeviceListEntry implements Initializable, IViewController, IExecuti
                 UiUtilities.setStyleClass(this.deviceListEntry, "status-error", false);
                 UiUtilities.setStyleClass(this.deviceListEntry, "locked", false);
                 this.deviceListEntry.setDisable(false);
-                this.statusText.set("Kein Aktor");
+                this.statusText.set("Keine Steckdose");
         }
     }
 
