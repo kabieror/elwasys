@@ -1,13 +1,11 @@
 #!/bin/bash
 set -e
 
-# Generate a random password
 function generate_password() {
   password=$(date +%s | sha256sum | base64 | head -c 32 ; echo)
   echo "$password"
 }
 
-# Ask for SSH password
 echo === System Configuratio ===
 echo
 read -s -p "Enter SSH password: " ssh_password
@@ -17,7 +15,6 @@ echo
 echo
 echo
 echo === Database Connection ===
-# Ask for database information
 echo
 read -p "Enter database server address (e.g., localhost:5432): " db_server
 echo
@@ -38,7 +35,6 @@ read -d '#' db_ca_cert
 echo
 echo
 echo === Email Settings ===
-# Ask for SMTP settings
 echo
 read -p "Enter SMTP server: " smtp_server
 echo
@@ -63,6 +59,9 @@ read -p "Enter portal URL: " portal_url
 echo
 echo
 echo
+
+echo "DB: $db_name // SMTP: $smtp_server // SSH: $ssh_password"
+echo "$db_ca_cert"
 
 echo Starting Installation...
 # Install Liberica JRE
