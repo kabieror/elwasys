@@ -1,15 +1,6 @@
 #!/bin/bash
 set -e
 
-# Read user input securely
-function read_secure() {
-  prompt=$1
-  stty -echo
-  read $prompt
-  stty echo
-  echo
-}
-
 # Generate a random password
 function generate_password() {
   password=$(date +%s | sha256sum | base64 | head -c 32 ; echo)
@@ -17,13 +8,13 @@ function generate_password() {
 }
 
 # Ask for SSH password
-read_secure -p "Enter SSH password: " ssh_password
+read -s -p "Enter SSH password: " ssh_password
 
 # Ask for database information
 read -p "Enter database server address (e.g., localhost:5432): " db_server
 read -p "Enter database name: " db_name
 read -p "Enter database username: " db_user
-read_secure -p "Enter database password: " db_password
+read -s -p "Enter database password: " db_password
 read -p "Should the database connection use SSL? (true/false): " db_use_ssl
 read -p "Enter CA certificate (PEM format) for database encryption: " db_ca_cert
 
@@ -35,7 +26,7 @@ read -p "Enter portal URL: " portal_url
 read -p "Enter SMTP server: " smtp_server
 read -p "Enter SMTP port: " smtp_port
 read -p "Enter SMTP username: " smtp_user
-read_secure -p "Enter SMTP password: " smtp_password
+read -s -p "Enter SMTP password: " smtp_password
 read -p "Should the SMTP connection use SSL? (true/false): " smtp_use_ssl
 read -p "Enter SMTP sender address: " smtp_sender
 
