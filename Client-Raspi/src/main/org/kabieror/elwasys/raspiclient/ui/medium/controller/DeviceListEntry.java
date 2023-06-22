@@ -602,11 +602,11 @@ public class DeviceListEntry implements Initializable, IViewController, IExecuti
     public void onRegister(MouseEvent event) {
         deviceRegistrationScheduler.submit(() -> {
             logger.info("Scanning for new actor for device " + device.getId());
-            registerButton.getStyleClass().add("active");
+            UiUtilities.setStyleClass(registerButton, "active", true);
             ElwaManager.instance.getDeviceRegistrationService()
                     .registerDevice(this.device)
                     .join();
-            registerButton.getStyleClass().remove("active");
+            UiUtilities.setStyleClass(registerButton, "active", false);
             refresh(true);
         });
     }
