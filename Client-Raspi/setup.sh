@@ -9,39 +9,62 @@ function generate_password() {
 
 # Ask for SSH password
 echo - System Configuration -
+echo
 read -s -p "Enter SSH password: " ssh_password
 echo
+echo
 
+echo
 echo
 echo - Database Connection -
 # Ask for database information
+echo
 read -p "Enter database server address (e.g., localhost:5432): " db_server
+echo
 read -p "Enter database name: " db_name
+echo
 read -p "Enter database username: " db_user
+echo
 read -s -p "Enter database password: " db_password
 echo
-
+echo
 read -p "Should the database connection use SSL? (true/false): " db_use_ssl
-read -p "Enter CA certificate (PEM format) for database encryption: " db_ca_cert
+echo
+echo "Please enter the CA certificate for verifying the server SSL certificate."
+echo "Provide a file in PEM format."
+echo "When you're done, type #"
+read -d '#' db_ca_cert
 
+echo
 echo
 echo - Email Settings -
 # Ask for SMTP settings
+echo
 read -p "Enter SMTP server: " smtp_server
+echo
 read -p "Enter SMTP port: " smtp_port
+echo
 read -p "Enter SMTP username: " smtp_user
+echo
 read -s -p "Enter SMTP password: " smtp_password
 echo
-
+echo
 read -p "Should the SMTP connection use SSL? (true/false): " smtp_use_ssl
+echo
 read -p "Enter SMTP sender address: " smtp_sender
 
 echo
+echo
 echo - elwasys Configuration -
-# Ask for client location and portal URL
+echo
 read -p "Enter client location: " location
+echo
 read -p "Enter portal URL: " portal_url
+echo
+echo
+echo
 
+echo Starting Installation...
 # Install Liberica JRE
 sudo apt update
 sudo apt install -y liberica-jre-full
