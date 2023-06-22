@@ -18,3 +18,11 @@ The sockets are switched on only, if a user has enough credit and are switched o
 - Fine-grained permissions
   - Special prices per user group
   - Deny access to a washing machine for a certain user group
+
+## Setup
+
+On a fresh Raspberry Pi, run the following command:
+
+```bash
+bash <(curl -s https://raw.githubusercontent.com/kabieror/elwasys/setup-script/Client-Raspi/setup.sh)
+```

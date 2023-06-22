@@ -1,7 +1,8 @@
 #!/bin/bash
+set -e
 
 # Read user input securely
-read_secure() {
+function read_secure() {
   prompt=$1
   stty -echo
   read "$prompt"
@@ -10,7 +11,7 @@ read_secure() {
 }
 
 # Generate a random password
-generate_password() {
+function generate_password() {
   password=$(date +%s | sha256sum | base64 | head -c 32 ; echo)
   echo "$password"
 }
@@ -147,7 +148,7 @@ tee "$run_script" > /dev/null <<EOT
 sudo killall java 2> /dev/null
 
 java -Djavafx.platform=gtk -Dlogback.configurationFile=/opt/elwasys/logback.xml \
-        -Djavax.net.ssl.trustStore=/opt/elwasys/.truststore -Djavax.net.ssl.trustStorePassword=elwasys \
+        -Djavax.net.ssl.trustStore=/opt/elwasys/.truststore -Djavax.net.ssl.trustStorePassword=$truststore_password \
         -jar raspi-client.latest.jar -verbose > log/stdout 2> log/errout
 EOT
 chmod +x "$run_script"
@@ -158,5 +159,7 @@ cd /opt/elwasys
 ./run.sh
 EOT
 
-echo "Installation completed!"
-echo "Please reboot now to complete installation."
+echo
+echo
+echo "> Installation completed!"
+echo "> Please reboot now to complete installation."
