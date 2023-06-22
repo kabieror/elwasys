@@ -8,7 +8,7 @@ function generate_password() {
 }
 
 # Ask for SSH password
-echo - System Configuration -
+echo === System Configuratio ===
 echo
 read -s -p "Enter SSH password: " ssh_password
 echo
@@ -16,7 +16,7 @@ echo
 
 echo
 echo
-echo - Database Connection -
+echo === Database Connection ===
 # Ask for database information
 echo
 read -p "Enter database server address (e.g., localhost:5432): " db_server
@@ -37,7 +37,7 @@ read -d '#' db_ca_cert
 
 echo
 echo
-echo - Email Settings -
+echo === Email Settings ===
 # Ask for SMTP settings
 echo
 read -p "Enter SMTP server: " smtp_server
@@ -55,7 +55,7 @@ read -p "Enter SMTP sender address: " smtp_sender
 
 echo
 echo
-echo - elwasys Configuration -
+echo === elwasys Configuration ===
 echo
 read -p "Enter client location: " location
 echo
