@@ -241,6 +241,8 @@ GRANT UPDATE ON SEQUENCE executions_id_seq TO GROUP elwaclients;
 
 GRANT UPDATE ON locations TO GROUP elwaclients;
 
+GRANT UPDATE ON devices TO GROUP elwaclients;
+
 GRANT INSERT ON credit_accounting TO GROUP elwaclients;
 GRANT UPDATE ON SEQUENCE credit_accounting_id_seq TO GROUP elwaclients;
 

@@ -498,6 +498,25 @@
     visibility: visible;
 }
 
+/** Status: Nicht registriert */
+.status-unregistered #registerButton {
+    visibility: visible;
+}
+#registerButton.active {
+    -fx-background-color: #4fc32e;
+    -fx-border-color: #45a82b;
+}
+
+#registerButton.active:pressed {
+    -fx-background-color: #5ae933;
+    -fx-border-color: #50d72e;
+}
+
+#registerButton.active > .caption,
+#registerButton.active > .icon-basic {
+    -fx-text-fill: #fff;
+}
+
 
 /**
  * Bestätigungsseite

@@ -2,7 +2,11 @@ package org.kabieror.elwasys.raspiclient.devices.deconz;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import org.kabieror.elwasys.raspiclient.configuration.WashguardConfiguration;
+import org.kabieror.elwasys.raspiclient.devices.deconz.model.DeconzChangeType;
+import org.kabieror.elwasys.raspiclient.devices.deconz.model.DeconzConfig;
 import org.kabieror.elwasys.raspiclient.devices.deconz.model.DeconzEvent;
+import org.kabieror.elwasys.raspiclient.devices.deconz.model.DeconzResourceType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.socket.CloseStatus;
@@ -13,6 +17,7 @@ import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.IOException;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,11 +26,12 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-class DeconzEventListener extends TextWebSocketHandler {
+public class DeconzEventListener extends TextWebSocketHandler {
     private static final Integer INITIAL_RECONNECT_DELAY_SECONDS = 5;
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final List<IDeconzPowerMeasurementEventListener> powerMeasurementEventListeners = new ArrayList<>();
     private final List<IDeconzDeviceStateEventListener> deviceStateEventListeners = new ArrayList<>();
+    private final List<IDeconzDeviceRegisteredListener> deviceRegisteredListeners = new ArrayList<>();
     private Integer reconnectDelaySeconds = INITIAL_RECONNECT_DELAY_SECONDS;
     private final AtomicBoolean isReconnectRunning = new AtomicBoolean(false);
     private final ScheduledExecutorService reconnectScheduler = Executors.newSingleThreadScheduledExecutor();
@@ -36,9 +42,13 @@ class DeconzEventListener extends TextWebSocketHandler {
     private String host;
     private int port;
 
-    public DeconzEventListener(String host, int port) {
-        this.host = host;
-        this.port = port;
+    public DeconzEventListener(WashguardConfiguration configuration, DeconzApiAdapter apiAdapter) throws IOException, InterruptedException {
+        var deconzUri = URI.create(configuration.getDeconzServer());
+        this.host = deconzUri.getHost();
+        var deconzConfig = apiAdapter.parseResponse(
+                apiAdapter.request("config", r -> r.GET()),
+                DeconzConfig.class);
+        this.port = deconzConfig.websocketport();
     }
 
     public void listenToPowerMeasurementReceived(IDeconzPowerMeasurementEventListener listener) {
@@ -87,12 +97,24 @@ class DeconzEventListener extends TextWebSocketHandler {
         byte[] rawBytes = message.getPayload().getBytes(StandardCharsets.UTF_8);
         try {
             DeconzEvent event = gson.fromJson(new String(rawBytes), DeconzEvent.class);
-            if (event.r().equals("sensors") && event.state() != null && event.state().power() != null) {
+
+            if (event.r() == DeconzResourceType.sensors
+                    && event.state() != null
+                    && event.state().power() != null) {
                 this.powerMeasurementEventListeners.forEach(
                         l -> l.onPowerMeasurementReceived(event));
-            } else if (event.r().equals("lights") && event.state() != null && event.state().on() != null) {
+
+            } else if (event.e() == DeconzChangeType.added
+                    && event.r() == DeconzResourceType.lights) {
+                this.deviceRegisteredListeners.forEach(
+                        l -> l.onDeviceRegistered(event.uniqueid()));
+
+            } else if (event.r() == DeconzResourceType.lights
+                    && event.state() != null
+                    && event.state().on() != null) {
                 this.deviceStateEventListeners.forEach(
                         l -> l.onDeviceStateChanged(event.uniqueid(), event.state().on()));
+
             }
         } catch (JsonSyntaxException e) {
             this.logger.error("Failed to read event data.", e);
@@ -128,5 +150,8 @@ class DeconzEventListener extends TextWebSocketHandler {
                 });
     }
 
+    public void listenToDeviceRegisteredEvent(IDeconzDeviceRegisteredListener listener) {
+        deviceRegisteredListeners.add(listener);
+    }
 }
 

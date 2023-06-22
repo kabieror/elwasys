@@ -1,11 +1,13 @@
 package org.kabieror.elwasys.raspiclient.devices;
 
-import java.io.IOException;
-
 import org.kabieror.elwasys.common.Device;
 import org.kabieror.elwasys.raspiclient.executions.FhemException;
 
+import java.io.IOException;
+
 public interface IDevicePowerManager {
+
+    void addPowerMeasurementListener(IDevicePowerMeasurementHandler handler);
 
     /**
      * Switches the power of a device on.
@@ -24,5 +26,6 @@ public interface IDevicePowerManager {
      */
     DevicePowerState getState(Device device) throws InterruptedException, FhemException, IOException;
 
-    void addPowerMeasurementListener(IDevicePowerMeasurementHandler handler);
+
 }
+
