@@ -1,12 +1,14 @@
 # elwasys #
 
-![Screenshot](https://raw.githubusercontent.com/kabieror/elwasys-raspi-client/master/docs/screenshot-startscreen-md.png)
+![Screenshot](Client-Raspi/docs/screenshot-startscreen-md.png)
 
-![Screenshot](https://raw.githubusercontent.com/kabieror/elwasys-raspi-client/master/docs/screenshot-confirmation-md.png)
+![Screenshot](Client-Raspi/docs/screenshot-confirmation-md.png)
 
-This client was developed to run on a RaspberryPi with the official 7" touch screen.
-It uses the OpenSource [FHEM-Server](https://fhem.de/) to communicate with remote controlled sockets.
-The sockets are switched on only, if a user has enough credit and are switched off again, when the washer is done.
+The elwasys client was developed to run on a RaspberryPi with the official 7" touch screen.
+It controls wireless sockets that are plugged in front of the managed washing machines.
+
+It uses the [ConBee2](https://phoscon.de/de/conbee2) stick to communicate with Zigbee smart plugs (e.g. [LIDL SilverCrest](https://www.lidl.de/p/silvercrest-3er-set-steckdosen-zwischenstecker-zigbee-smart-home-mit-energiezaehler/p800003184)).
+The wireless sockets are switched on if a user has enough credit and are switched off again when the washer is done.
 
 ## Features
 
@@ -24,5 +26,5 @@ The sockets are switched on only, if a user has enough credit and are switched o
 On a fresh Raspberry Pi, run the following command:
 
 ```bash
-bash <(curl -s https://raw.githubusercontent.com/kabieror/elwasys/setup-script/Client-Raspi/setup.sh)
+bash <(curl -s https://raw.githubusercontent.com/kabieror/elwasys/master/Client-Raspi/setup.sh)
 ```
