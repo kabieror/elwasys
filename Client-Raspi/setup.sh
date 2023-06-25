@@ -334,6 +334,7 @@ echo "  $ sudo reboot"
 echo
 echo Please be sure to change the default password of the user $USER.
 echo Run this command to change the password:
+echo
 echo "  $ passwd"
 echo
 echo
