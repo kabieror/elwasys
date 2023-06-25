@@ -6,7 +6,7 @@ function generate_password() {
   echo "$password"
 }
 
-echo === System Configuratio ===
+echo === System Configuration ===
 echo
 read -s -p "Enter SSH password: " ssh_password
 echo
