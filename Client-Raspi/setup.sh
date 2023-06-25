@@ -8,6 +8,16 @@ then
   exit 1
 fi
 
+function log_state() {
+  local cyan='\033[0;36m'
+  local reset='\033[0m'
+  echo -e "\n${cyan}> $@${reset}"
+}
+function log_success() {
+  local green='\033[0;32m'
+  local reset='\033[0m'
+  echo -e "\n${green}> $@${reset}"
+}
 function generate_password() {
   password=$(date +%s | sha256sum | base64 | head -c 32 ; echo)
   echo "$password"
@@ -64,7 +74,7 @@ echo
 echo "DB: $db_name // SMTP: $smtp_server // SSH: $ssh_password"
 echo "$db_ca_cert"
 
-echo Starting Installation...
+log_state Starting Installation...
 
 echo -e "\n > Installing Java Runtime Environment"
 wget -q -O - https://download.bell-sw.com/pki/GPG-KEY-bellsoft | sudo apt-key add -
@@ -72,7 +82,9 @@ echo "deb [arch=arm64] https://apt.bell-sw.com/ stable main" | sudo tee /etc/apt
 sudo apt update
 sudo apt install bellsoft-java17-runtime-full
 
-echo -e "\n > Installing elwasys"
+
+
+log_state Installing elwasys...
 ELWA_ROOT=/opt/elwasys
 sudo mkdir -p $ELWA_ROOT
 sudo chown "$USER:$USER" $ELWA_ROOT
@@ -89,7 +101,7 @@ else
     echo "Skipping downloading raspi-client JAR. File already exists: $jar_file"
 fi
 
-echo -e "\n > Configuring elwasys"
+log_state Configuring elwasys
 # Populate the Config file
 config_file="./elwasys.properties"
 sudo tee "$config_file" > /dev/null <<EOT
@@ -207,8 +219,10 @@ EOT
 
 echo
 echo
-echo "> Installation completed!"
-echo "> Please reboot now to complete installation."
+log_success Installation completed!
+echo Please reboot now to complete installation.
+echo
+echo "  $ sudo reboot"
 echo
 echo Please be sure to change the default password of the user $USER.
 echo Run this command to change the password:
