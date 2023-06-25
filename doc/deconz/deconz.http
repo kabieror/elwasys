@@ -1,8 +1,8 @@
 
-@url = http://192.168.0.15:8900
+@url = http://localhost
 # @name login
 POST {{url}}/api
-Authorization: Basic delight:elwasys2014
+Authorization: Basic delight:delight
 
 {
     "devicetype": "tester"
@@ -15,11 +15,12 @@ GET {{url}}/api/{{token}}/config
 
 ###
 
+GET {{url}}/api/{{token}}/lights
+
+###
+
 GET {{url}}/api/{{token}}/lights/a4:c1:38:ae:c6:5e:e1:02-01
 
 ###
 
 GET {{url}}/api/{{token}}/sensors
-
-# a4:c1:38:ae:c6:5e:e1:02-01
-# a4:c1:38:ae:c6:5e:e1:02-01
