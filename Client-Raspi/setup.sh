@@ -1,6 +1,13 @@
 #!/bin/bash
 set -e
 
+# Check if the script is run as root
+if [[ $EUID -eq 0 ]]
+then
+  echo "This script should not be run as root."
+  exit 1
+fi
+
 function generate_password() {
   password=$(date +%s | sha256sum | base64 | head -c 32 ; echo)
   echo "$password"
@@ -72,16 +79,19 @@ sudo apt update
 sudo apt install bellsoft-java17-runtime-full
 
 echo -e "\n > Installing elwasys"
-sudo mkdir -p /opt/elwasys
-sudo chown pi:pi /opt/elwasys
+ELWA_ROOT=/opt/elwasys
+sudo mkdir -p $ELWA_ROOT
+sudo chown "$USER:$USER" $ELWA_ROOT
+
+cd $ELWA_ROOT
 
 VER=$(curl --silent -qI https://github.com/kabieror/elwasys/releases/latest | awk -F '/' '/^location/ {print  substr($NF, 1, length($NF)-1)}')
-wget https://github.com/kabieror/elwasys/releases/download/$VER/raspi-client-${VER}.jar -O /opt/elwasys/raspi-client-${VER}.jar
-ln -s /opt/elwasys/raspi-client-${VER}.jar /opt/elwasys/raspi-client.latest.jar
+wget https://github.com/kabieror/elwasys/releases/download/$VER/raspi-client-${VER}.jar -O ./raspi-client-${VER}.jar
+ln -s ./raspi-client-${VER}.jar ./raspi-client.latest.jar
 
 echo -e "\n > Configuring elwasys"
 # Populate the Config file
-config_file="/opt/elwasys/elwasys.properties"
+config_file="./elwasys.properties"
 sudo tee "$config_file" > /dev/null <<EOT
 # The address of the postgresql server
 database.server: $db_server
@@ -116,7 +126,7 @@ EOT
 sudo chmod 600 "$config_file"
 
 # configure logging
-logback_config="/opt/elwasys/logback.xml"
+logback_config="./logback.xml"
 tee "$logback_config" > /dev/null <<EOT
 <configuration scan="true" debug="true">
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
@@ -164,29 +174,29 @@ tee "$logback_config" > /dev/null <<EOT
 EOT
 
 # create ca-db.pem
-ca_db="/opt/elwasys/ca-db.pem"
+ca_db="./ca-db.pem"
 echo -e "$db_ca_cert" > $ca_db
 
 truststore_password=$(generate_password)
-truststore_file="/opt/elwasys/.truststore"
+truststore_file="./.truststore"
 sudo keytool -import -trustcacerts -keystore "$truststore_file" -storepass "$truststore_password" -alias ca_cert -file "$ca_db" -noprompt
 
 # run.sh script
-run_script="/opt/elwasys/run.sh"
+run_script="./run.sh"
 tee "$run_script" > /dev/null <<EOT
 #!/bin/bash
 
 sudo killall java 2> /dev/null
 
-java -Djavafx.platform=gtk -Dlogback.configurationFile=/opt/elwasys/logback.xml \
-        -Djavax.net.ssl.trustStore=/opt/elwasys/.truststore -Djavax.net.ssl.trustStorePassword=$truststore_password \
+java -Djavafx.platform=gtk -Dlogback.configurationFile=$ELWA_ROOT/logback.xml \
+        -Djavax.net.ssl.trustStore=$ELWA_ROOT/.truststore -Djavax.net.ssl.trustStorePassword=$truststore_password \
         -jar raspi-client.latest.jar -verbose > log/stdout 2> log/errout
 EOT
 chmod +x "$run_script"
 
 # Auto-Start
 tee "~/.xsession" > /dev/null <<EOT
-cd /opt/elwasys
+cd $ELWA_ROOT
 ./run.sh
 EOT
 
