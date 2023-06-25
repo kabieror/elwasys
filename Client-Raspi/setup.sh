@@ -14,8 +14,9 @@ function generate_password() {
 }
 
 echo === System Configuration ===
-echo
-read -s -p "Enter SSH password: " ssh_password
+echo Please ensure to change the password of the user $USER.
+echo Run:
+echo "  $ passwd"
 echo
 echo
 
