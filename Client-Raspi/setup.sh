@@ -13,13 +13,6 @@ function generate_password() {
   echo "$password"
 }
 
-echo === System Configuration ===
-echo Please ensure to change the password of the user $USER.
-echo Run:
-echo "  $ passwd"
-echo
-echo
-
 echo
 echo
 echo === Database Connection ===
@@ -216,3 +209,9 @@ echo
 echo
 echo "> Installation completed!"
 echo "> Please reboot now to complete installation."
+echo
+echo Please be sure to change the default password of the user $USER.
+echo Run this command to change the password:
+echo "  $ passwd"
+echo
+echo
