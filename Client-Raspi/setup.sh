@@ -75,7 +75,7 @@ function collect_data() {
 
 function install_dependencies() {
     sudo apt-get update
-    sudo apt-get install -y curl jq
+    sudo apt-get install -y curl
 }
 
 # # # # # # #
@@ -283,11 +283,11 @@ DECONZ_PASSWORD=$(generate_password)
 log_state Starting Installation...
 install_dependencies
 
-# setup_firewall
+setup_firewall
 
 # install_java
 
-install_deconz
+# install_deconz
 
 # install_elwasys
 
