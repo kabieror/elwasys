@@ -28,46 +28,46 @@ function collect_data() {
     echo
     echo === Database Connection ===
     echo
-    read -p "Enter database server address (e.g., localhost:5432): " db_server
+    read -p "Enter database server address (e.g., localhost:5432): " DB_SERVER
     echo
-    read -p "Enter database name: " db_name
+    read -p "Enter database name: " DB_NAME
     echo
-    read -p "Enter database username: " db_user
+    read -p "Enter database username: " DB_USER
     echo
-    read -s -p "Enter database password: " db_password
+    read -s -p "Enter database password: " DB_PASSWORD
     echo
     echo
-    read -p "Should the database connection use SSL? (true/false): " db_use_ssl
+    read -p "Should the database connection use SSL? (true/false): " DB_USE_SSL
     echo
     echo "Please enter the CA certificate for verifying the server SSL certificate."
     echo "Provide a file in PEM format."
     echo "When you're done, type #"
-    read -d '#' db_ca_cert
+    read -d '#' DB_CA_CERT
 
     echo
     echo
     echo === Email Settings ===
     echo
-    read -p "Enter SMTP server: " smtp_server
+    read -p "Enter SMTP server: " SMTP_SERVER
     echo
-    read -p "Enter SMTP port: " smtp_port
+    read -p "Enter SMTP port: " SMTP_PORT
     echo
-    read -p "Enter SMTP username: " smtp_user
+    read -p "Enter SMTP username: " SMTP_USER
     echo
-    read -s -p "Enter SMTP password: " smtp_password
+    read -s -p "Enter SMTP password: " SMTP_PASSWORD
     echo
     echo
-    read -p "Should the SMTP connection use SSL? (true/false): " smtp_use_ssl
+    read -p "Should the SMTP connection use SSL? (true/false): " SMTP_USE_SSL
     echo
-    read -p "Enter SMTP sender address: " smtp_sender
+    read -p "Enter SMTP sender address: " SMTP_SENDER
 
     echo
     echo
     echo === elwasys Configuration ===
     echo
-    read -p "Enter client location: " location
+    read -p "Enter client location: " LOCATION
     echo
-    read -p "Enter portal URL: " portal_url
+    read -p "Enter portal URL: " PORTAL_URL
     echo
     echo
     echo
@@ -149,12 +149,12 @@ function install_elwasys() {
 
     cd $ELWA_ROOT
 
-    VER=$(curl --silent -qI https://github.com/kabieror/elwasys/releases/latest | awk -F '/' '/^location/ {print  substr($NF, 1, length($NF)-1)}')
-    jar_file=./raspi-client-${VER}.jar
+    version=$(curl --silent -qI https://github.com/kabieror/elwasys/releases/latest | awk -F '/' '/^location/ {print  substr($NF, 1, length($NF)-1)}')
+    jar_file=./raspi-client-${version}.jar
     if [ ! -f "$jar_file" ]
     then
-        wget https://github.com/kabieror/elwasys/releases/download/$VER/raspi-client-${VER}.jar -O $jar_file
-        ln -s ./raspi-client-${VER}.jar ./raspi-client.latest.jar
+        wget https://github.com/kabieror/elwasys/releases/download/$version/raspi-client-${version}.jar -O $jar_file
+        ln -s ./raspi-client-${version}.jar ./raspi-client.latest.jar
     else
         echo "Skipping downloading raspi-client JAR. File already exists: $jar_file"
     fi
@@ -167,34 +167,56 @@ function config_elwasys() {
     config_file="./elwasys.properties"
     sudo tee "$config_file" > /dev/null <<EOT
 # The address of the postgresql server
-database.server: $db_server
+# z.B. - databaseserver1:5432
+#      - 192.168.0.100:10090,
+#      - 10.0.0.5
+database.server: $DB_SERVER
 
 # Name of the database
-database.name: $db_name
+database.name: $DB_NAME
 
 # Username for the database connection
-database.user: $db_user
+database.user: $DB_USER
 
 # Password for the database connection
-database.password: $db_password
+database.password: $DB_PASSWORD
 
-# Whether the database connection is to be encrypted
-database.useSsl: $db_use_ssl
+# Weather the database connection is to be encrypted
+database.useSsl: $DB_USE_SSL
 
-# Location of this client, as specified in elwaPortal
-# Only devices at this location will be available.
-location: $location
+# Location of this client
+#   Only devices at this location will be available.
+# e.g. Laundry
+location: $LOCATION
+
+# Time in seconds after which the display is turned off
+# If the value is negative, the display will not be turned off.
+displayTimeout: 10
+
+# Time in seconds for which the startup procedure is to be delayed
+startupDelay: 0
+
+# Time in seconds after which a logged in user is to be logged off.
+sessionTimeout: 60
 
 # The URL of the elwasys web portal
-portalUrl: $portal_url
+portalUrl: $PORTAL_URL
+
+# Address of the Zigbee gateway
+deconz.server: http://localhost
+deconz.user: delight
+deconz.password: $DECONZ_PASSWORD
 
 # Settings for outgoing mails
-smtp.server: $smtp_server
-smtp.port: $smtp_port
-smtp.user: $smtp_user
-smtp.password: $smtp_password
-smtp.useSSL: $smtp_use_ssl
-smtp.senderAddress: $smtp_sender
+smtp.server: $SMTP_SERVER
+smtp.port: $SMTP_PORT
+smtp.user: $SMTP_USER
+smtp.password: $SMTP_PASSWORD
+smtp.useSSL: $SMTP_USE_SSL
+smtp.senderAddress: $SMTP_SENDER
+
+# Port to listen on for incoming maintenance requests
+maintenance.port: 3591
 EOT
     sudo chmod 600 "$config_file"
 
@@ -279,7 +301,7 @@ cd $ELWA_ROOT
 EOT
 }
 
-# collect_data
+collect_data
 
 ELWA_ROOT=/opt/elwasys
 DECONZ_PASSWORD=$(generate_password)
@@ -289,15 +311,14 @@ install_dependencies
 
 setup_firewall
 
-# install_java
+install_java
 
-# install_deconz
+install_deconz
 
-# install_elwasys
+install_elwasys
 
-# config_elwasys
+config_elwasys
 
-# # # # # # #
 echo
 echo
 log_success Installation completed!
