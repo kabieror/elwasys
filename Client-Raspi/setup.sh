@@ -123,18 +123,22 @@ function install_deconz() {
     sudo apt-get update
     sudo apt-get install -y deconz
 
-    otp="elwasysinstalleronetimetoken"
-    curl -XPOST \
-        -H 'Authorization: Basic ZGVsaWdodDpkZWxpZ2h0' \
+    echo "Setting new password"
+    dc_url="http://localhost"
+    dc_user="delight"
+    dc_ott="elwasysinstalleronetimetoken"
+    old_credentials=`echo -n "$dc_user:$dc_user" | base64`
+    new_credentials=`echo -n "$dc_user:$DECONZ_PASSWORD" | base64`
+
+    curl -sf -XPOST \
+        -H "Authorization: Basic $old_credentials" \
         -H "Content-type: application/json" \
-        -d "{ \"username\": \"$otp\", \"devicetype\": \"installer\" }" \
-        http://localhost/api
-    old_hash=`echo "$dc_user:$dc_user" | base64`
-    new_hash=`echo "$dc_user:$DECONZ_PASSWORD" | base64`
-    curl -XPUT \
+        -d "{ \"username\": \"$dc_ott\", \"devicetype\": \"installer\" }" \
+        $dc_url/api > /dev/null || { echo "ERROR: Failed to log in to deCONZ using the default credentials."; }
+    curl -sf -XPUT \
         -H "Content-type: application/json" \
-        -d "{ \"username\": \"$dc_user\", \"oldhash\": \"$old_hash\", \"newhash\": \"$new_hash\" }" \
-        http://localhost/api/$otp/config/password
+        -d "{ \"username\": \"$dc_user\", \"oldhash\": \"$old_credentials\", \"newhash\": \"$new_credentials\" }" \
+        $dc_url/api/$dc_ott/config/password > /dev/null || { echo "ERROR: Failed to change the deCONZ password."; }
 }
 
 # # # # # # #
