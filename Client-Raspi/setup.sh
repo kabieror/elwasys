@@ -303,6 +303,10 @@ cd $ELWA_ROOT
 EOT
 }
 
+##################################
+######## Main Entrypoint #########
+##################################
+
 collect_data
 
 ELWA_ROOT=/opt/elwasys
