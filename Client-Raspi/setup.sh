@@ -272,7 +272,7 @@ EOT
 
     # create ca-db.pem
     ca_db="./ca-db.pem"
-    echo -e "$db_ca_cert" > $ca_db
+    echo -e "$DB_CA_CERT" > $ca_db
 
     truststore_password=$(generate_password)
     truststore_file="./.truststore"
