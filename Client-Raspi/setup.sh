@@ -116,7 +116,7 @@ function install_deconz() {
     sudo gpasswd -a $USER dialout
     wget -O - http://phoscon.de/apt/deconz.pub.key | \
             sudo apt-key add -
-    sudo sh -c "echo 'deb [arch=arm64] http://phoscon.de/apt/deconz \
+    sudo sh -c "echo 'deb [arch=aarch64] http://phoscon.de/apt/deconz \
                 $(lsb_release -cs) main' > \
                 /etc/apt/sources.list.d/deconz.list"
 
