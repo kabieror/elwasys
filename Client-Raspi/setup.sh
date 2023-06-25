@@ -203,8 +203,11 @@ java -Djavafx.platform=gtk -Dlogback.configurationFile=$ELWA_ROOT/logback.xml \
 EOT
 chmod +x "$run_script"
 
+# Create log output folder
+mkdir -p ./log
+
 # Auto-Start
-tee "~/.xsession" > /dev/null <<EOT
+cat > ~/.xsession <<EOT
 cd $ELWA_ROOT
 ./run.sh
 EOT
