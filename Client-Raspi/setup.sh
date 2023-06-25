@@ -64,16 +64,22 @@ echo "DB: $db_name // SMTP: $smtp_server // SSH: $ssh_password"
 echo "$db_ca_cert"
 
 echo Starting Installation...
-# Install Liberica JRE
-sudo apt update
-sudo apt install -y liberica-jre-full
 
-mkdir -p /opt/elwasys
+echo -e "\n > Installing Java Runtime Environment"
+wget -q -O - https://download.bell-sw.com/pki/GPG-KEY-bellsoft | sudo apt-key add -
+echo "deb [arch=arm64] https://apt.bell-sw.com/ stable main" | sudo tee /etc/apt/sources.list.d/bellsoft.list
+sudo apt update
+sudo apt install bellsoft-java17-runtime-full
+
+echo -e "\n > Installing elwasys"
+sudo mkdir -p /opt/elwasys
+sudo chown pi:pi /opt/elwasys
 
 VER=$(curl --silent -qI https://github.com/kabieror/elwasys/releases/latest | awk -F '/' '/^location/ {print  substr($NF, 1, length($NF)-1)}')
 wget https://github.com/kabieror/elwasys/releases/download/$VER/raspi-client-${VER}.jar -O /opt/elwasys/raspi-client-${VER}.jar
 ln -s /opt/elwasys/raspi-client-${VER}.jar /opt/elwasys/raspi-client.latest.jar
 
+echo -e "\n > Configuring elwasys"
 # Populate the Config file
 config_file="/opt/elwasys/elwasys.properties"
 sudo tee "$config_file" > /dev/null <<EOT
