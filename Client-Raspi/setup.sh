@@ -87,8 +87,14 @@ sudo chown "$USER:$USER" $ELWA_ROOT
 cd $ELWA_ROOT
 
 VER=$(curl --silent -qI https://github.com/kabieror/elwasys/releases/latest | awk -F '/' '/^location/ {print  substr($NF, 1, length($NF)-1)}')
-wget https://github.com/kabieror/elwasys/releases/download/$VER/raspi-client-${VER}.jar -O ./raspi-client-${VER}.jar
-ln -s ./raspi-client-${VER}.jar ./raspi-client.latest.jar
+jar_file=./raspi-client-${VER}.jar
+if [ ! -f "$jar_file" ]
+then
+    wget https://github.com/kabieror/elwasys/releases/download/$VER/raspi-client-${VER}.jar -O $jar_file
+    ln -s ./raspi-client-${VER}.jar ./raspi-client.latest.jar
+else
+    echo "Skipping downloading raspi-client JAR. File already exists: $jar_file"
+fi
 
 echo -e "\n > Configuring elwasys"
 # Populate the Config file
@@ -180,6 +186,8 @@ echo -e "$db_ca_cert" > $ca_db
 
 truststore_password=$(generate_password)
 truststore_file="./.truststore"
+# Remove truststore file if it already exists
+[ -f "$truststore_file" ] && rm -f $truststore_file
 sudo keytool -import -trustcacerts -keystore "$truststore_file" -storepass "$truststore_password" -alias ca_cert -file "$ca_db" -noprompt
 
 # run.sh script
