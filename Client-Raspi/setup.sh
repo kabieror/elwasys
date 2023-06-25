@@ -141,6 +141,7 @@ function install_deconz() {
         $dc_url/api/$dc_ott/config/password > /dev/null || { echo "ERROR: Failed to change the deCONZ password."; }
 }
 
+
 # # # # # # #
 function install_elwasys() {
     log_state Installing elwasys...
@@ -159,6 +160,7 @@ function install_elwasys() {
         echo "Skipping downloading raspi-client JAR. File already exists: $jar_file"
     fi
 }
+
 
 # # # # # # #
 function config_elwasys() {
