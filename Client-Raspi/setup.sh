@@ -82,7 +82,7 @@ function install_dependencies() {
 function install_java() {
     log_state Installing Java Runtime Environment...
     wget -q -O - https://download.bell-sw.com/pki/GPG-KEY-bellsoft | sudo apt-key add -
-    echo "deb [arch=arm64] https://apt.bell-sw.com/ stable main" | sudo tee /etc/apt/sources.list.d/bellsoft.list
+    echo "deb [arch=armhf] https://apt.bell-sw.com/ stable main" | sudo tee /etc/apt/sources.list.d/bellsoft.list
     sudo apt-get update
     sudo apt-get install -y bellsoft-java17-runtime-full
 }
