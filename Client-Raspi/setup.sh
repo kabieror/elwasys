@@ -167,7 +167,7 @@ function config_elwasys() {
     log_state Configuring elwasys
     # Populate the Config file
     config_file="./elwasys.properties"
-    sudo tee "$config_file" > /dev/null <<EOT
+    tee "$config_file" > /dev/null <<EOT
 # The address of the postgresql server
 # z.B. - databaseserver1:5432
 #      - 192.168.0.100:10090,
