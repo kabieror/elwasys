@@ -82,7 +82,7 @@ function install_dependencies() {
 function install_java() {
     log_state Installing Java Runtime Environment...
     wget -q -O - https://download.bell-sw.com/pki/GPG-KEY-bellsoft | sudo apt-key add -
-    echo "deb [arch=arm64] https://apt.bell-sw.com/ stable main" | sudo tee /etc/apt/sources.list.d/bellsoft.list
+    echo "deb [arch=armhf] https://apt.bell-sw.com/ stable main" | sudo tee /etc/apt/sources.list.d/bellsoft.list
     sudo apt-get update
     sudo apt-get install -y bellsoft-java17-runtime-full
 }
@@ -116,7 +116,7 @@ function install_deconz() {
     sudo gpasswd -a $USER dialout
     wget -O - http://phoscon.de/apt/deconz.pub.key | \
             sudo apt-key add -
-    sudo sh -c "echo 'deb [arch=aarch64] http://phoscon.de/apt/deconz \
+    sudo sh -c "echo 'deb [arch=armhf] http://phoscon.de/apt/deconz \
                 $(lsb_release -cs) main' > \
                 /etc/apt/sources.list.d/deconz.list"
 
@@ -167,7 +167,7 @@ function config_elwasys() {
     log_state Configuring elwasys
     # Populate the Config file
     config_file="./elwasys.properties"
-    sudo tee "$config_file" > /dev/null <<EOT
+    tee "$config_file" > /dev/null <<EOT
 # The address of the postgresql server
 # z.B. - databaseserver1:5432
 #      - 192.168.0.100:10090,
