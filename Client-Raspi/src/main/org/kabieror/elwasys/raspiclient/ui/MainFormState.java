@@ -92,11 +92,6 @@ public enum MainFormState {
     USER_CREDIT,
 
     /**
-     * Werbung
-     */
-    APP_ADVERTISEMENT,
-
-    /**
      * Fehlerzustand
      */
     ERROR,

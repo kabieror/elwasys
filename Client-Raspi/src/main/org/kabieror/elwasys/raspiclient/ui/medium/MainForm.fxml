@@ -29,10 +29,6 @@
         <fx:include fx:id="confirmationPane" source="components/ConfirmationPane.fxml" AnchorPane.bottomAnchor="25"
                     AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40"/>
 
-        <!-- App-Advertisement -->
-        <fx:include fx:id="appAdvertisement" source="components/AppInfoPane.fxml" AnchorPane.leftAnchor="0"
-                    AnchorPane.bottomAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="40"/>
-
         <!-- Fehler-Panel -->
         <fx:include fx:id="errorPane" source="components/ErrorPane.fxml" AnchorPane.bottomAnchor="25"
                     AnchorPane.leftAnchor="0.0"
