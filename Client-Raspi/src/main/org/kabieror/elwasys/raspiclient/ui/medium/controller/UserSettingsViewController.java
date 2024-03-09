@@ -9,7 +9,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import org.kabieror.elwasys.common.FormatUtilities;
 import org.kabieror.elwasys.common.User;
-import org.kabieror.elwasys.raspiclient.ui.MainFormState;
 import org.kabieror.elwasys.raspiclient.ui.medium.IViewController;
 import org.kabieror.elwasys.raspiclient.ui.medium.MainFormController;
 import org.kabieror.elwasys.raspiclient.ui.medium.state.ToolbarState;
@@ -86,7 +85,6 @@ public class UserSettingsViewController implements IViewController {
 
     public void onAuthKeyInfo(MouseEvent mouseEvent) {
         this.mainFormController.hideUserSettings();
-        this.mainFormController.showAppAdvertisement();
     }
 
     @Override

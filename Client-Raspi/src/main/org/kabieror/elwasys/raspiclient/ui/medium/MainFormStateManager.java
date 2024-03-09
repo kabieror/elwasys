@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.BooleanSupplier;
 import java.util.function.Function;
 
 /**
@@ -83,29 +82,6 @@ class MainFormStateManager implements IMainFormStateManager {
                 .put(new MainFormStateTransition(MainFormState.CONFIRMATION, MainFormState.SELECT_DEVICE), (newState) -> {
                     this.doTransition(this.controller.devicesPaneController);
                     return true;
-                });
-
-        this.stateTransitions
-                .put(new MainFormStateTransition(MainFormState.ANY, MainFormState.APP_ADVERTISEMENT), (newState) -> {
-                    this.doTransition(this.controller.appAdvertisementController);
-                    return true;
-                });
-
-        this.stateTransitions
-                .put(new MainFormStateTransition(MainFormState.APP_ADVERTISEMENT, MainFormState.ANY), (newState) -> {
-                    switch (newState) {
-                        case SELECT_DEVICE:
-                            this.doTransition(this.controller.devicesPaneController);
-                            return true;
-                        case CONFIRMATION:
-                            this.doTransition(this.controller.confirmationPaneController);
-                            return true;
-                        case CONFIRM_PROGRAM_ABORTION:
-                            this.doTransition(this.controller.abortPaneController);
-                            return true;
-                        default:
-                            return false;
-                    }
                 });
 
         this.state = MainFormState.INIT;
