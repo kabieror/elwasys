@@ -218,6 +218,7 @@ smtp.useSSL: $SMTP_USE_SSL
 smtp.senderAddress: $SMTP_SENDER
 
 # Port to listen on for incoming maintenance requests
+maintenance.server: $DB_SERVER
 maintenance.port: 3591
 EOT
     sudo chmod 600 "$config_file"
