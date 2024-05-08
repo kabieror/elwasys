@@ -48,6 +48,7 @@ public class DataManager {
         dbProperties.setProperty("password", this.config.getDatabasePassword());
         if (this.config.getDatabaseUseSsl()) {
             dbProperties.setProperty("ssl", "true");
+            dbProperties.setProperty("sslmode", "require");
         }
 
         if (!this.config.getDatabaseUseSsl()) {
