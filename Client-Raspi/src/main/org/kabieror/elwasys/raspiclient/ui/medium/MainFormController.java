@@ -51,8 +51,6 @@ public class MainFormController extends AbstractMainFormController implements IM
     @FXML
     UserSettingsViewController userSettingsController;
     @FXML
-    AppInfoViewController appAdvertisementController;
-    @FXML
     private WaitPaneController waitPaneController;
 
     /**
@@ -173,7 +171,6 @@ public class MainFormController extends AbstractMainFormController implements IM
             this.toolbarPaneController.onStart(this);
             this.waitPaneController.onStart(this);
             this.userSettingsController.onStart(this);
-            this.appAdvertisementController.onStart(this);
         });
 
         ElwaManager.instance.getExecutionManager().listenToExecutionStartedEvent(this);
@@ -295,18 +292,6 @@ public class MainFormController extends AbstractMainFormController implements IM
      */
     public void hideUserSettings() {
         this.stateManager.hideUserSettings();
-    }
-
-    public void showAppAdvertisement() {
-        this.stateManager.gotoState(MainFormState.APP_ADVERTISEMENT);
-    }
-
-    public void hideAppAdvertisement() {
-        if (this.getRegisteredUser() != null) {
-            this.stateManager.gotoState(this.stateManager.getPreviousState());
-        } else {
-            this.stateManager.gotoState(MainFormState.SELECT_DEVICE);
-        }
     }
 
     /**
