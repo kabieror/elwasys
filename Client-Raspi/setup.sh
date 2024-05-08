@@ -122,6 +122,7 @@ function install_deconz() {
 
     sudo apt-get update
     sudo apt-get install -y deconz
+    sudo systemctl enable deconz
 
     echo "Setting new password"
     dc_url="http://localhost"
