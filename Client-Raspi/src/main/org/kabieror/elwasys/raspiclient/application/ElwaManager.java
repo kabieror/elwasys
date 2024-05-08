@@ -171,6 +171,7 @@ public class ElwaManager {
                 }
             }
         } catch (Exception e) {
+            this.logger.error("Failed to start up managers.", e);
             if (deconzEventListener != null) {
                 deconzEventListener.stop();
             }
