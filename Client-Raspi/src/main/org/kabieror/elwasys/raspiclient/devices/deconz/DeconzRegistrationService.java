@@ -1,6 +1,7 @@
 package org.kabieror.elwasys.raspiclient.devices.deconz;
 
 import com.google.gson.Gson;
+import org.apache.commons.lang3.StringUtils;
 import org.kabieror.elwasys.common.Device;
 import org.kabieror.elwasys.raspiclient.devices.IDeviceRegistrationService;
 import org.kabieror.elwasys.raspiclient.devices.deconz.model.DeconzConfigPariing;
@@ -33,7 +34,7 @@ public class DeconzRegistrationService implements IDeviceRegistrationService {
 
     @Override
     public boolean isDeviceRegistered(Device device) {
-        return device.getDeconzUuid() != null;
+        return StringUtils.isNotBlank(device.getDeconzUuid());
     }
 
     @Override
