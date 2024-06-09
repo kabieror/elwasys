@@ -36,7 +36,7 @@ class DeconzService {
 
     public void setDeviceState(String deviceUuid, boolean newState) throws IOException, InterruptedException {
         var currentState = getDeviceState(deviceUuid);
-        if (!currentState.reachable()) {
+        if (currentState == null || !currentState.reachable()) {
             throw new DeconzException("Das Gerät ist nicht erreichbar.");
         }
         if (currentState.on() == newState) {

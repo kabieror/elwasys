@@ -128,6 +128,11 @@ public abstract class AbstractMainFormController implements Initializable, IExec
             Platform.runLater(() -> this.displayError("Start fehlgeschlagen",
                     "Die Anwendung wurde mehrfach gestartet.",
                     actionContainer, false));
+        } catch (Exception e) {
+            this.logger.error("Initialization error.", e);
+            Platform.runLater(() -> this.displayError("Start fehlgeschlagen",
+                    "Ein unbekannter Fehler ist aufgetreten.",
+                    actionContainer, false));
         }
         return false;
     }
