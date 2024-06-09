@@ -175,6 +175,7 @@ public class ElwaManager {
             if (deconzEventListener != null) {
                 deconzEventListener.stop();
             }
+            throw e;
         }
     }
 
